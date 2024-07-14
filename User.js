@@ -1,19 +1,21 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const postSchema = new Schema({
-    id: {
-        type:String,
-        required:true
-    },
+const userSchema = new Schema({
     name: {
         type:String,
+        unique:true,
         required:true
     },
-    description: {
+    email: {
         type:String,
         required:true
+    },
+    password: {
+        type:String,
+        required:true,
+        minlength:6,
     }
 },{timestamps:true})
 
-module.exports = mongoose.model('Post', postSchema)
+module.exports = mongoose.model('User', userSchema)

@@ -1,36 +1,23 @@
 const express = require('express');
-const Post = require('./Post');
+const User = require('./User');
 const path = require('path');
 const cors = require('cors');
 const app = express();
-
-//Cors should prevent CORS errors. If they happen anyway, clearing the cache works
-app.use(cors());
-app.use(express.json());
+const cookieParser = require("cookie-parser");
 
 require('./db')
 
-app.get("/post", (req,res) => {
-    Post
-        .find()
-        .then((data) => {
-            return res.status(200).json({
-                data
-            })
-        })
-        .catch((err) => {
-            return res.status(400).json({
-                err
-            })
-        })
+//Cors should prevent CORS errors. If they happen anyway, clearing the cache works
+app.use(cors({ 
+    origin: 'http://localhost:3000', 
+    credentials: true 
+}));
 
-})
+app.use(cookieParser());
 
-app.get("/data", (req,res) => {
-    return res.status(200).json({
-        message:"success"
-    })
-})
+app.use(express.json());
+
+app.use("/api/auth", require("./Auth/Route"))
 
 if (process.env.NODE_ENV === 'production') {
 
