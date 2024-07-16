@@ -6,14 +6,17 @@ function App() {
   const [clothing, setClothing] = useState([]);
 
   useEffect(() => {
-    axios.get(process.env.REACT_APP_OUTFIT_URI)
-    .then(res => {
-      console.log(res.data.data)
-      setClothing(res.data.data);
-    })
-    .catch(err => {
-      console.log(err)
-    })
+    const getClothes = async () => {
+      try {
+        const res = await axios.get(process.env.REACT_APP_CLOTHING_URI, { withCredentials: true
+        });
+        setClothing(res.data.clothes);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    getClothes();
+    
   }, [])
 
   return (
@@ -22,7 +25,7 @@ function App() {
         <thead>
           <tr>
             <th>Id</th>
-            <th>Clothing ids</th>
+            <th>Category</th>
             <th>Formality</th>
           </tr>
         </thead>
@@ -30,7 +33,7 @@ function App() {
           {clothing.map(item => {
             return (
               <tr key={item.id}>
-                <td>{item.clothing_ids}</td>
+                <td>{item.category}</td>
                 <td>{item.formality}</td>
               </tr>
             )

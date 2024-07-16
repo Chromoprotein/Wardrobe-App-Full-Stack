@@ -18,6 +18,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api/auth", require("./Auth/Route"))
+app.use("/wardrobe", require("./Basic/Route"))
 
 if (process.env.NODE_ENV === 'production') {
 

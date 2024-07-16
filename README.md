@@ -1,1 +1,4 @@
-Example app with MongoDB and Heroku.
+To do:
+
+- Fetch the user's clothes
+- Make sure useAuth works

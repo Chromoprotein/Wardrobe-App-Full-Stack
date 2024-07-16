@@ -11,7 +11,7 @@ import Register from './Register';
 import Login from './Login';
 import App from './App';
 import Logout from './Logout';
-import { useAuth } from './useAuth';
+import { useAuth, AuthProvider } from './authContext';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -42,6 +42,8 @@ function RequireAuth({ children, redirectTo }) {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <AuthProvider>
       <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );
