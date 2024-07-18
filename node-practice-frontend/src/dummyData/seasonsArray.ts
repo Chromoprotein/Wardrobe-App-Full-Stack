@@ -1,0 +1,1 @@
+export const seasons: string[] = ["winter", "autumn", "spring", "summer"];

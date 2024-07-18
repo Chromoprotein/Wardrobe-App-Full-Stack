@@ -12,6 +12,10 @@ import Login from './Login';
 import App from './App';
 import Logout from './Logout';
 import { useAuth, AuthProvider } from './authContext';
+import { ClothingContextProvider } from './contexts/ClothingContext';
+import { FilterContextProvider } from './contexts/FilterContext';
+import { PaginationContextProvider } from './contexts/PaginationContext';
+import { OutfitContextProvider } from './contexts/OutfitsContext';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -43,7 +47,15 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <ClothingContextProvider>
+        <PaginationContextProvider>
+          <FilterContextProvider>
+            <OutfitContextProvider>
+              <RouterProvider router={router} />
+            </OutfitContextProvider>
+          </FilterContextProvider>
+        </PaginationContextProvider>
+        </ClothingContextProvider>
     </AuthProvider>
   </React.StrictMode>
 );

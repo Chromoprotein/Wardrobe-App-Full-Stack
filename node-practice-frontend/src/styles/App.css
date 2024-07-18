@@ -1,0 +1,305 @@
+/*ENTIRE PAGE*/
+* {
+  font-family:Arial, Helvetica, sans-serif;
+  --dark: #121212;
+  --medium:#40394a;
+  --colorpop: #BB86FC;
+  --darkwhite:rgb(196, 194, 201);
+  --extragrey: rgba(54, 40, 58, 0.616);
+}
+*, ::before, ::after {
+  box-sizing: border-box;
+  font-size: 16px;
+}
+html {
+  color: var(--darkwhite);
+  background-color: var(--dark);
+}
+/*React router Link*/
+a {
+  text-decoration: none;
+  color: var(--darkwhite);
+}
+body {
+  margin: 0;
+}
+
+/*MAIN WRAPPERS*/
+/*wraps the entire main page to position the navbar and content*/
+.mainPageWrapper {
+  display:grid;
+  grid-template-columns: 1fr 7fr;
+}
+@media only screen and (max-width: 720px) {
+  .mainPageWrapper {
+    grid-template-columns: 1fr;
+  }
+}
+/*wraps the whole menu/navbar*/
+.navbarWrapper {
+  background-color: var(--dark);
+  width: 100%;
+}
+/*wraps the clothing cards and the pagination menu*/
+.mainContentWrapper {
+  background-color: var(--dark);
+  padding:20px;
+}
+/*wraps buttons on the generate outfits page*/
+.outfitButtonWrapper {
+  max-width:500px;
+}
+/*on the saved outfits page*/
+.outfitContainer {
+  background-color: var(--extragrey);
+}
+/*Nav container of the pagination buttons*/
+.paginationButtonNav {
+  text-align: center;
+  margin: 20px;
+}
+
+/*MODAL*/
+.modalStyle {
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.543);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.messageContent {
+  background-color: var(--colorpop);
+  color: var(--dark);
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  margin: 20px auto;
+  position:relative; /*to position the close button*/
+}
+
+/*FORM*/
+/*wraps the whole form*/
+.formWrapper {
+  background-color: var(--extragrey);
+  width:100%;
+  max-width: 400px;
+  margin: 5px auto;
+  padding: 50px;
+}
+/*text input element*/
+.textInputStyle {
+  border:3px solid transparent;
+  padding:10px;
+  background-color: var(--extragrey);
+  width:100%;
+  margin: 5px;
+  color: var(--darkwhite);
+}
+.textInputStyle:focus {
+  outline:none;
+}
+/* Hide default arrows */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/*INTERACTION EFFECTS*/
+/*style for selected elements*/
+.selectedStyle {
+  border: 3px solid var(--colorpop);
+  background-color: var(--medium);
+  color: var(--darkwhite);
+}
+.idleStyle:not(img) {
+  border: 3px solid transparent;
+  background-color: var(--medium);
+  color: var(--darkwhite);
+}
+.idleStyle:hover:not(:disabled) {
+  border: 3px solid var(--colorpop);
+  transition-duration: 0.3s;
+}
+.disabledStyle {
+  border: 3px solid transparent;
+  background-color: black;
+  color: gray;
+}
+/*formControl = the label element of custom checkboxes and radio buttons*/
+.formControl:hover,
+.textInputStyle:hover {
+  opacity: 0.7;
+  transition-duration: 0.3s;
+}
+
+/*FADE IN AND OUT ANIMATION*/
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+/* Apply animations to a class */
+.success-animation {
+  animation: fadeIn 0.5s ease-out, fadeOut 0.5s ease-out 2.5s;
+  /* Fade in and stay visible for 2.5s before fading out */
+  animation-fill-mode: forwards;
+  /* Keeps the animation state at the end of the animation (stays faded out) */
+}
+
+/*BUTTON*/
+.dangerButton {
+  background-color:rgba(82, 15, 27, 0.639) !important;
+  border: 3px solid transparent;
+}
+/*navigation buttons use this*/
+.mediumButton {
+  margin: 3px;
+  padding: 10px;
+}
+/*left navbar components use this*/
+.bigButton {
+  margin: 4px auto 4px auto;
+  padding: 20px;
+  width: 100%;
+  text-align-last: center; /*so the text in dropdown menus isn't messed up*/
+  display:block;
+  max-width: 200px;
+}
+.bigButton:focus {
+  outline: none;
+}
+.specialButton {
+  background-color: #bb86fc4e !important;
+}
+.xButton {
+  position:absolute;
+  top:0;
+  right:0;
+  border: none;
+  background: transparent;
+  color: black;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/*LOGO*/
+.logoImage {
+  width:100%;
+  display: block;
+  margin-bottom: 3px;
+}
+
+/*SCROLLBAR*/
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--medium);
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--colorpop);
+}
+
+/*CUSTOM CHECKBOXES*/
+/*label*/
+.checkboxContainer {
+  display:flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+input[type="checkbox"], input[type="radio"] {
+  -webkit-appearance: none;
+  /* Remove most all native input styles */
+  appearance: none;
+  /* For iOS < 15 */
+  background-color: var(--dark);
+  /* Not removed via appearance */
+  margin: 0;
+  width: 1.15em;
+  height: 1.15em;
+  display: grid;
+  place-content: center;
+}
+/*the checkmark*/
+input[type="checkbox"]::before, input[type="radio"]::before{
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  visibility: hidden;
+}
+.whiteCheckmark::before {
+  background-color: var(--darkwhite);
+}
+.blackCheckmark::before {
+  background-color: var(--dark);
+}
+input[type="checkbox"]:checked::before, input[type="radio"]:checked::before {
+  visibility: visible;
+}
+
+/*CLOTHING CARDS*/
+.clothingCardContainer {
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content:center;
+  gap:30px;
+  width: 100%;
+  margin: 20px auto;
+  padding:10px;
+}
+.clothingCard {
+  background-color: var(--medium);
+  width: 100%;
+  max-width: 300px;
+  margin: 0px auto;
+  aspect-ratio: 1 / 1;
+  /*align the image and text horizontally and vertically inside the card using flexbox*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border:3px solid transparent;
+}
+.clothingImage {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  margin: 0 auto;
+}
+.placeholderImage {
+  opacity:0.5;
+}
+.clothingTextWrapper {
+  text-align: center;
+  vertical-align: middle;
+  padding: 10px;
+}
