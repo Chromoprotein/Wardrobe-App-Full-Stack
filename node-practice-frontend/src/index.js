@@ -16,14 +16,20 @@ import { ClothingContextProvider } from './contexts/ClothingContext';
 import { FilterContextProvider } from './contexts/FilterContext';
 import { PaginationContextProvider } from './contexts/PaginationContext';
 import { OutfitContextProvider } from './contexts/OutfitsContext';
+import ClothingFormLogic from './components/ClothingFormLogic';
+import ClothingEditLogic from './components/ClothingEditLogic';
+import FileUpload from './components/ImageUpload';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">        
       <Route index element={<App />} />
       <Route path="register" element={<Register />} />
+      <Route path="edit/:id" element={<ClothingEditLogic/>} />
+      <Route path="submit" element={<ClothingFormLogic/>} />
       <Route path="login" element={<Login />} />
       <Route path="logout" element={<Logout />} />
+      <Route path="uploadImage/:id" element={<FileUpload />} />
       <Route path="*" element={<h1>Page not found</h1>} />
     </Route>
   )

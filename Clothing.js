@@ -30,8 +30,20 @@ const clothingSchema = new Schema({
         type:Number,
         required:true
     },
-    cpw: {
+    size: {
+        type:String,
+        required:true
+    },
+    brand: {
+        type:String,
+        required:true
+    },
+    worn_count: {
         type:Number,
+        required:true
+    },
+    img: {
+        type:String,
         required:true
     }
 },{collection : 'clothes'})

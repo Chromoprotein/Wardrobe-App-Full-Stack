@@ -18,27 +18,29 @@ interface ClothingCardProps {
 
 export default function ClothingCard({ clothingProp }: ClothingCardProps) {
 
-  const { cost, worn_count, category, id, color, season, formality } = clothingProp; 
+  const { cost, worn_count, category, subcategory, _id, color, season, formality, brand, size, img } = clothingProp; 
 
   const costPerWear = (cost / worn_count).toFixed(2);
 
   // Record constructs an object shape
   // Keys: an union of string literals (ClothingCategory)
   // Type: type of the values (strings which are the photos)
-  //const images: Record<string, string> = { dress, skirt, shirt, sweater,jacket, pants, tights, socks, leggings, cardigan };
+  const images: Record<string, string> = { dress, skirt, shirt, sweater, jacket, pants, tights, socks, leggings, cardigan };
 
   // The key is a clothing category, the value is an image
-  //const clothingPicture = img.length === 0 ? images[category] : img;
+  const clothingPicture = !img ? images[subcategory] :  "http://localhost:8000/" + img;
+
+  console.log("image test" + img)
 
   const spacer = <span> &#8226; </span>;
 
   return (
     <div className="clothingCard idleStyle">
-      <Link to={`/edit/${id}`}>
-      {/*<img src={clothingPicture} alt={category} className="clothingImage placeholderImage" />*/}
+      <Link to={`/edit/${_id}`}>
+      <img src={clothingPicture} alt={category} className="clothingImage placeholderImage" />
       <div className="clothingTextWrapper">
-        {category} {spacer} {spacer}
-        {color} {spacer} {season} {spacer}
+        {category} {spacer} {brand} {spacer}
+        {color} {spacer} {season} {spacer} {size} {spacer}
         {formality} {spacer} wears: {worn_count} {spacer}
         CPW:{" "}
         {worn_count !== 0 ? (

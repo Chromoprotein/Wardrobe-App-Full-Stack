@@ -37,6 +37,7 @@ function App() {
         const res = await axios.get(clothingUri, { withCredentials: true
         });
         setClothes(res.data.clothes);
+        console.log(res.data.clothes)
       } catch (err) {
         console.log(err);
       } finally {
@@ -54,7 +55,7 @@ function App() {
   // Apply filters on clothes and map them
   const mapClothes: JSX.Element[] = filteredClothes(clothes)
     .map((piece: ClothingProp) => (
-      <div key={piece.id}>
+      <div key={piece._id}>
         <ClothingCard clothingProp={piece} />
       </div>
     )

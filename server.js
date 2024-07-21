@@ -1,17 +1,20 @@
 const express = require('express');
-const User = require('./User');
 const path = require('path');
 const cors = require('cors');
 const app = express();
 const cookieParser = require("cookie-parser");
+const bodyParser = require('body-parser');
 
 require('./db')
+
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 //Cors should prevent CORS errors. If they happen anyway, clearing the cache works
 app.use(cors({ 
     origin: 'http://localhost:3000', 
     credentials: true 
-}));
+})); 
 
 app.use(cookieParser());
 

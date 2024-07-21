@@ -3,11 +3,37 @@ const bcrypt = require("bcryptjs")
 const User = require('../User');
 const Clothing = require('../Clothing');
 const Outfit = require('../Outfit');
+const Image = require('../Image')
 
 // User authentication with JSON Web Token
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const jwtSecret = process.env.JWT_SECRET;
+
+exports.uploadImage = async (req, res) => {
+  const newImage = new Image({
+    filename: req.file.originalname,
+    contentType: req.file.mimetype,
+    imageBase64: req.file.buffer.toString('base64'),
+    userId: req.id,
+    clothingId: req.params.id
+  });
+
+  newImage.save()
+    .then(image => res.json(image))
+    .catch(err => res.status(500).json({ error: err.message }));
+}
+
+//exports.fetchImageById = async (req, res) => {
+//  Image.findById(req.params.id)
+//    .then(image => {
+//      if (!image) return res.status(404).json({ error: 'Image not found' });
+//
+//      res.contentType(image.contentType);
+//      res.send(Buffer.from(image.imageBase64, 'base64'));
+//    })
+//    .catch(err => res.status(500).json({ error: err.message }));
+//}
 
 // Lists all the user's books
 exports.getClothes = async (req, res) => {
@@ -29,106 +55,47 @@ exports.getClothes = async (req, res) => {
     }
 }
 
-// Search function
-exports.findBooks = async (req, res) => {
-  try {
-    const { title, genre, sortBy, page, pageSize } = req.query;
-    
-    // User id comes from the auth middleware
-    const userId = req.id;
-
-    let query = { userId: userId };
-    if (title) {
-      query.title = { $regex: title, $options: 'i' }; // Case-insensitive
-    }
-    if (genre) {
-      query.genre = genre;
-    }
-
-    // Sorting
-    let sort = {};
-    // Default sort by date (newest first)
-    if (sortBy) {
-      if(sortBy === "Title") {
-        sort["title"] = 1;
-      } else if(sortBy === "Author") {
-        sort["author"] = 1;
-      } else if(sortBy === "Most hated") {
-        sort["stars"] = 1;
-      } else if(sortBy === "Most liked") {
-        sort["stars"] = -1;
-      }
-      // Old way:
-      //const parts = sortBy.split(':');
-      //sort[parts[0]] = parts[1] === 'desc' ? -1 : 1;
-    } else {
-      sort.createdAt = -1;
-    }
-
-    // Pagination
-    const finalPageSize = pageSize ? pageSize : 10;
-    const currentPage = parseInt(page) || 1;
-
-    // Total count of books
-    const totalCount = await Book.countDocuments(query);
-
-    const books = await Book.find(query)
-    .sort(sort)
-    .skip((currentPage - 1) * finalPageSize)
-    .limit(finalPageSize);
-
-    if(!books) {
-      return res.status(404).json({ message: "Books not found" });
-    }
-    res.status(200).json({
-          totalItems: totalCount,
-          totalPages: Math.ceil(totalCount / finalPageSize),
-          currentPage: currentPage,
-          books
-        });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-}
-
-// View a specific book
-exports.getBookById = async (req, res) => {
+// View a specific item
+exports.getItemById = async (req, res) => {
     try {
         // User id comes from the auth middleware
         const userId = req.id;
 
-        const bookId = req.params.bookId;
+        const clothingId = req.params.id;
 
-        // Find the user by ID and populate the books field
-        const book = await Book.findOne({ _id: bookId, userId: userId });
+        console.log("we aere hereee")
 
-        if (!book) {
-            return res.status(404).json({ message: "Books not found" });
+        // Find the user by ID and populate the clothing field
+        const clothing = await Clothing.findOne({ _id: clothingId, user_id: userId });
+
+        if (!clothing) {
+            return res.status(404).json({ message: "Item not found" });
         }
 
-        res.status(200).json({ book });
+        res.status(200).json({ clothing });
     } catch (error) {
-        console.error("Error finding books:", error);
+        console.error("Error finding the item:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 }
 
-exports.addBook = async (req, res) => {
+exports.addItem = async (req, res) => {
   try {
-    const { title, author, genre, coverUrl, stars, notes, series } = req.body
-    // User id comes from authentication middleware
-    const userId = req.id;
+    const { category, subcategory, color, formality, season, cost, size, brand, worn_count, img } = req.body;
 
-    if (!title || !author || !genre || !userId) {
+    // User id comes from authentication middleware
+    const user_id = req.id;
+
+    if (!category || !subcategory || !color || !formality || !season || !cost || !size || !brand || !worn_count || !img || !user_id) {
       return res.status(500).json({
         message: "Form information missing or user not found",
       })
     } else {
-      const book = await Book.create({ userId, title, author, genre, coverUrl, stars, notes, series })
-      if(book) {
+      const clothing = await Clothing.create({ user_id, category, subcategory, color, formality, season, cost, size, brand, img, worn_count })
+      if(clothing) {
         res.status(201).json({
-          message: "Book successfully created",
-          bookId: book._id,
+          message: "Clothing successfully created",
+          id: clothing._id,
         });
       }
     }
@@ -141,45 +108,40 @@ exports.addBook = async (req, res) => {
 
 }
 
-exports.updateBook = async (req, res) => {
+exports.updateItem = async (req, res) => {
   try {
-    const { title, author, genre, coverUrl, stars, notes, series } = req.body
-    const bookId = req.params.id; // Assuming you will use URL parameter for book ID
+    const { category, subcategory, brand, color, size, season, cost, formality, worn_count, img } = req.body
+    const clothingId = req.params.id;
     const userId = req.id; // User id from authentication middleware
 
     // Check that all the data is present
-    if (!bookId || !title || !author || !genre || !userId) {
+    if (!category || !subcategory || !brand || !color || !size || !season || !cost || !formality || !worn_count || !img || !userId) {
       return res.status(400).json({
         message: "Required information is missing",
       });
     }
 
-    // Check that the book document exists and belongs to the user
-    const validateBook = await Book.findOne({ _id: bookId, userId: userId });
-    if (!validateBook) {
-      return res.status(404).json({ message: "Book not found for this user" });
+    // Check that the clothing document exists and belongs to the user
+    const validateItem = await Clothing.findOne({ _id: clothingId, user_id: userId });
+    if (!validateItem) {
+      return res.status(404).json({ message: "Item not found for this user" });
     }
 
     // Update the book details
-    validateBook.title = title;
-    validateBook.author = author;
-    validateBook.genre = genre;
-    if(stars) {
-      validateBook.stars = stars;
-    }
-    if(notes) {
-      validateBook.notes = notes;
-    }
-    if(coverUrl) {
-      validateBook.coverUrl = coverUrl;
-    }
-    if(series) {
-      validateBook.series = series;
-    }
+    validateItem.category = category;
+    validateItem.subcategory = subcategory;
+    validateItem.brand = brand;
+    validateItem.color = color;
+    validateItem.size = size;
+    validateItem.season = season;
+    validateItem.cost = cost;
+    validateItem.formality = formality;
+    validateItem.worn_count = worn_count;
+    validateItem.img = img;
     
-    await validateBook.save();
+    await validateItem.save();
 
-    res.json({ message: "Book updated successfully" });
+    res.json({ message: "Item updated successfully" });
     
   } catch (error) {
     res.status(500).json({
@@ -189,20 +151,21 @@ exports.updateBook = async (req, res) => {
   }
 }
 
-exports.deleteBook = async (req, res) => {
+exports.deleteItem = async (req, res) => {
     try {
         const userId = req.id; // User id from auth middleware
-        const bookId = req.params.id; // Book id from URL parameter
+        const clothingId = req.params.id; // Clothing id from URL parameter
 
-        const book = await Book.findOneAndDelete({ _id: bookId, userId: userId });
+        console.log("test" + userId + clothingId)
+        const clothing = await Clothing.findOneAndDelete({ _id: clothingId, user_id: userId });
 
-        if (!book) {
-            return res.status(404).json({ message: "Book not found or not authorized to delete" });
+        if (!clothing) {
+            return res.status(404).json({ message: "Item not found or not authorized to delete" });
         }
 
-        res.status(200).json({ message: "Book deleted successfully" });
+        res.status(200).json({ message: "Item deleted successfully" });
     } catch (error) {
-        console.error("Error deleting book:", error);
+        console.error("Error deleting item:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 };

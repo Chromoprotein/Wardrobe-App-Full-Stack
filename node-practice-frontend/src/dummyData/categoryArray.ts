@@ -1,3 +1,3 @@
-const category: string[] = ["pants", "skirt", "shirt", "sweater", "dress", "jacket", "tights", "leggings", "cardigan", "socks"];
+const category: string[] = ["bottom", "top", "one-piece", "layering piece", "outerwear", "accessory"];
 
 export default category;
