@@ -24,16 +24,24 @@ exports.uploadImage = async (req, res) => {
     .catch(err => res.status(500).json({ error: err.message }));
 }
 
-//exports.fetchImageById = async (req, res) => {
-//  Image.findById(req.params.id)
-//    .then(image => {
-//      if (!image) return res.status(404).json({ error: 'Image not found' });
-//
-//      res.contentType(image.contentType);
-//      res.send(Buffer.from(image.imageBase64, 'base64'));
-//    })
-//    .catch(err => res.status(500).json({ error: err.message }));
-//}
+exports.fetchImageById = async (req, res) => {
+  const userId = req.id;
+  const clothingId = req.params.id;
+
+  try {
+    const image = await Image.findOne({ userId: userId, clothingId: clothingId });
+    if(!image) {
+      res.status(404).json({ message: "No image found" });
+    }
+    console.log("Image found:", image);
+    res.status(200).json(image);
+    //res.contentType(image.contentType);
+    //res.send(Buffer.from(image.imageBase64, 'base64'));
+  } catch (err) {
+      console.error("Error finding image:", error);
+      res.status(500).json({ message: "Internal server error" });
+  }
+}
 
 // Lists all the user's books
 exports.getClothes = async (req, res) => {

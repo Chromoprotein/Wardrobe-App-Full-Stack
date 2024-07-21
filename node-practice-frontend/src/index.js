@@ -19,6 +19,7 @@ import { OutfitContextProvider } from './contexts/OutfitsContext';
 import ClothingFormLogic from './components/ClothingFormLogic';
 import ClothingEditLogic from './components/ClothingEditLogic';
 import FileUpload from './components/ImageUpload';
+import ImageFetch from './components/ImageFetchTest';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
       <Route path="login" element={<Login />} />
       <Route path="logout" element={<Logout />} />
       <Route path="uploadImage/:id" element={<FileUpload />} />
+      <Route path="imageFetch/:id" element={<ImageFetch />} />
       <Route path="*" element={<h1>Page not found</h1>} />
     </Route>
   )
