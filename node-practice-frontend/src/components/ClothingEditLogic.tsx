@@ -21,7 +21,6 @@ export default function ClothingEditLogic() {
         cost: "",
         formality: "",
         worn_count: "",
-        img: "",
     }
 
     const [formState, setFormState] = useState<FormProp>(initialState as FormProp);
@@ -56,7 +55,6 @@ export default function ClothingEditLogic() {
             cost: newData.cost,
             formality: newData.formality,
             worn_count: newData.worn_count,
-            img: newData.img,
         })
 
       } catch (err) {
@@ -81,8 +79,9 @@ export default function ClothingEditLogic() {
         e.preventDefault();
         const formData = new FormData();
         for (const key in formState) {
-            if (formState.hasOwnProperty(key)) {
-                formData.append(key, formState[key as keyof FormProp]);
+            const value = formState[key as keyof FormProp];
+            if (value !== null) {  // Ensure the value is not null
+                formData.append(key, value as string | Blob);
             }
         }
 

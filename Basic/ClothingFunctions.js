@@ -43,7 +43,7 @@ exports.fetchImageById = async (req, res) => {
   }
 }
 
-// Lists all the user's books
+// Lists all the user's clothes
 exports.getClothes = async (req, res) => {
     try {
         // User id comes from the auth middleware
@@ -71,8 +71,6 @@ exports.getItemById = async (req, res) => {
 
         const clothingId = req.params.id;
 
-        console.log("we aere hereee")
-
         // Find the user by ID and populate the clothing field
         const clothing = await Clothing.findOne({ _id: clothingId, user_id: userId });
 
@@ -89,17 +87,21 @@ exports.getItemById = async (req, res) => {
 
 exports.addItem = async (req, res) => {
   try {
-    const { category, subcategory, color, formality, season, cost, size, brand, worn_count, img } = req.body;
+    const { category, subcategory, color, formality, season, cost, size, brand, worn_count } = req.body;
+
+    const filename = req.file.originalname;
+    const contentType = req.file.mimetype;
+    const imageBase64 = req.file.buffer.toString('base64');
 
     // User id comes from authentication middleware
     const user_id = req.id;
 
-    if (!category || !subcategory || !color || !formality || !season || !cost || !size || !brand || !worn_count || !img || !user_id) {
+    if (!category || !subcategory || !color || !formality || !season || !cost || !size || !brand || !worn_count || !user_id) {
       return res.status(500).json({
         message: "Form information missing or user not found",
       })
     } else {
-      const clothing = await Clothing.create({ user_id, category, subcategory, color, formality, season, cost, size, brand, img, worn_count })
+      const clothing = await Clothing.create({ user_id, category, subcategory, color, formality, season, cost, size, brand, worn_count, filename, contentType, imageBase64 })
       if(clothing) {
         res.status(201).json({
           message: "Clothing successfully created",
@@ -118,12 +120,12 @@ exports.addItem = async (req, res) => {
 
 exports.updateItem = async (req, res) => {
   try {
-    const { category, subcategory, brand, color, size, season, cost, formality, worn_count, img } = req.body
+    const { category, subcategory, brand, color, size, season, cost, formality, worn_count } = req.body
     const clothingId = req.params.id;
     const userId = req.id; // User id from authentication middleware
 
     // Check that all the data is present
-    if (!category || !subcategory || !brand || !color || !size || !season || !cost || !formality || !worn_count || !img || !userId) {
+    if (!category || !subcategory || !brand || !color || !size || !season || !cost || !formality || !worn_count || !userId) {
       return res.status(400).json({
         message: "Required information is missing",
       });
@@ -145,7 +147,6 @@ exports.updateItem = async (req, res) => {
     validateItem.cost = cost;
     validateItem.formality = formality;
     validateItem.worn_count = worn_count;
-    validateItem.img = img;
     
     await validateItem.save();
 

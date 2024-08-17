@@ -18,7 +18,7 @@ interface ClothingCardProps {
 
 export default function ClothingCard({ clothingProp }: ClothingCardProps) {
 
-  const { cost, worn_count, category, subcategory, _id, color, season, formality, brand, size, img } = clothingProp; 
+  const { cost, worn_count, category, subcategory, _id, color, season, formality, brand, size, filename, imageBase64, contentType } = clothingProp; 
 
   const costPerWear = (cost / worn_count).toFixed(2);
 
@@ -28,16 +28,14 @@ export default function ClothingCard({ clothingProp }: ClothingCardProps) {
   const images: Record<string, string> = { dress, skirt, shirt, sweater, jacket, pants, tights, socks, leggings, cardigan };
 
   // The key is a clothing category, the value is an image
-  const clothingPicture = !img ? images[subcategory] :  "http://localhost:8000/" + img;
-
-  console.log("image test" + img)
+  const clothingPicture = (!imageBase64 || !contentType) ? images[subcategory] : ("data:" + contentType + ";base64," + imageBase64);
 
   const spacer = <span> &#8226; </span>;
 
   return (
     <div className="clothingCard idleStyle">
       <Link to={`/edit/${_id}`}>
-      <img src={clothingPicture} alt={category} className="clothingImage placeholderImage" />
+      <img src={clothingPicture} alt={filename || category} className="clothingImage placeholderImage" />
       <div className="clothingTextWrapper">
         {category} {spacer} {brand} {spacer}
         {color} {spacer} {season} {spacer} {size} {spacer}

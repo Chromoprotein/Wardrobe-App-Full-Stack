@@ -13,7 +13,7 @@ const upload = multer({ storage });
 // The route and the method and function that are used in it
 router.route("/getClothes").get(userAuth, getClothes)
 router.route("/getItemById/:id").get(userAuth, getItemById)
-router.route("/addItem").post(userAuth, upload.none(), addItem)
+router.route("/addItem").post(userAuth, upload.single('file'), addItem)
 router.route("/updateItem/:id").put(userAuth, upload.none(), updateItem)
 router.route("/deleteItem/:id").delete(userAuth, deleteItem)
 

@@ -45,7 +45,19 @@ const clothingSchema = new Schema({
     img: {
         type:String,
         required:true
-    }
+    },
+    filename: {
+        type:String,
+        required:false
+    },
+    contentType: {
+        type:String,
+        required:false
+    },
+    imageBase64: {
+        type:String,
+        required:false
+    },
 },{collection : 'clothes'})
 
 module.exports = mongoose.model('Clothing', clothingSchema)

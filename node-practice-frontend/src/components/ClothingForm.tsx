@@ -15,9 +15,11 @@ interface FormProps {
   newClothing: FormProp;
   handleClothesFormChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   isSuccess?: boolean;
+  handleFileUpload?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  filename?: string;
 }
 
-export default function ClothingForm({ handleClothingSubmit, newClothing, handleClothesFormChange, isSuccess }: FormProps) {
+export default function ClothingForm({ handleClothingSubmit, newClothing, handleClothesFormChange, isSuccess, handleFileUpload, filename }: FormProps) {
 
     // Submit button
     const isDisabled = !Object.values(newClothing).every(value => value);
@@ -26,7 +28,14 @@ export default function ClothingForm({ handleClothingSubmit, newClothing, handle
       <div className="formWrapper">
         <form onSubmit={handleClothingSubmit}>
 
-          <InputField name="img" menuState={newClothing.img} eventHandler={handleClothesFormChange} type="string" placeholder="Image URL"/>
+          {handleFileUpload &&
+            <div className='custom-file mb-4'>
+              <input type='file' className='custom-file-input' id='customFile' onChange={handleFileUpload} />
+              <label className='custom-file-label' htmlFor='customFile'>
+                {filename}
+              </label>
+            </div>
+          }
 
           <SelectMenu name="category" menuState={newClothing.category} inputArray={category} eventHandler={handleClothesFormChange}/>
 

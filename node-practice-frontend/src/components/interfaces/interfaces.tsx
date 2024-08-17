@@ -9,7 +9,10 @@ export interface ClothingProp {
   worn_count: number;
   size: string;
   brand: string;
-  img: string;
+
+  filename?: string;
+  imageBase64?: string;
+  contentType?: string;
 }
 
 export interface FormProp {
@@ -22,5 +25,6 @@ export interface FormProp {
   cost: string;
   formality: string;
   worn_count: string;
-  img: string;
+  file?: File | null;
+  filename?: string;
 }
