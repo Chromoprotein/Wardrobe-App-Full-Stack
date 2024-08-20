@@ -303,3 +303,9 @@ input[type="checkbox"]:checked::before, input[type="radio"]:checked::before {
   vertical-align: middle;
   padding: 10px;
 }
+
+.customLabel {
+  display:block;
+  text-align: center;
+  text-overflow: ellipsis;
+}

@@ -42,10 +42,6 @@ const clothingSchema = new Schema({
         type:Number,
         required:true
     },
-    img: {
-        type:String,
-        required:true
-    },
     filename: {
         type:String,
         required:false

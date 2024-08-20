@@ -11,37 +11,48 @@ require('dotenv').config()
 const jwtSecret = process.env.JWT_SECRET;
 
 exports.uploadImage = async (req, res) => {
-  const newImage = new Image({
-    filename: req.file.originalname,
-    contentType: req.file.mimetype,
-    imageBase64: req.file.buffer.toString('base64'),
-    userId: req.id,
-    clothingId: req.params.id
-  });
 
-  newImage.save()
-    .then(image => res.json(image))
-    .catch(err => res.status(500).json({ error: err.message }));
-}
-
-exports.fetchImageById = async (req, res) => {
+  const filename = req.file.originalname;
+  const contentType = req.file.mimetype;
+  const imageBase64 = req.file.buffer.toString('base64');
   const userId = req.id;
   const clothingId = req.params.id;
 
-  try {
-    const image = await Image.findOne({ userId: userId, clothingId: clothingId });
-    if(!image) {
-      res.status(404).json({ message: "No image found" });
-    }
-    console.log("Image found:", image);
-    res.status(200).json(image);
+  // Check that the clothing document exists and belongs to the user
+  const validateItem = await Clothing.findOne({ _id: clothingId, user_id: userId });
+  if (!validateItem) {
+    return res.status(404).json({ message: "Item not found for this user" });
+  }
+
+  // Update the book details
+  validateItem.filename = filename;
+  validateItem.contentType = contentType;
+  validateItem.imageBase64 = imageBase64;
+  
+  await validateItem.save();
+
+  res.json({ message: "Item updated successfully" });
+
+}
+
+//exports.fetchImageById = async (req, res) => {
+//  const userId = req.id;
+//  const clothingId = req.params.id;
+
+//  try {
+//    const image = await Image.findOne({ userId: userId, clothingId: clothingId });
+//    if(!image) {
+//      res.status(404).json({ message: "No image found" });
+//    }
+//    console.log("Image found:", image);
+//    res.status(200).json(image);
     //res.contentType(image.contentType);
     //res.send(Buffer.from(image.imageBase64, 'base64'));
-  } catch (err) {
-      console.error("Error finding image:", error);
-      res.status(500).json({ message: "Internal server error" });
-  }
-}
+//  } catch (err) {
+//      console.error("Error finding image:", error);
+//      res.status(500).json({ message: "Internal server error" });
+//  }
+//}
 
 // Lists all the user's clothes
 exports.getClothes = async (req, res) => {
@@ -65,33 +76,29 @@ exports.getClothes = async (req, res) => {
 
 // View a specific item
 exports.getItemById = async (req, res) => {
-    try {
-        // User id comes from the auth middleware
-        const userId = req.id;
+  try {
+      // User id comes from the auth middleware
+      const userId = req.id;
 
-        const clothingId = req.params.id;
+      const clothingId = req.params.id;
 
-        // Find the user by ID and populate the clothing field
-        const clothing = await Clothing.findOne({ _id: clothingId, user_id: userId });
+      // Find the user by ID and populate the clothing field
+      const clothing = await Clothing.findOne({ _id: clothingId, user_id: userId });
 
-        if (!clothing) {
-            return res.status(404).json({ message: "Item not found" });
-        }
+      if (!clothing) {
+          return res.status(404).json({ message: "Item not found" });
+      }
 
-        res.status(200).json({ clothing });
-    } catch (error) {
-        console.error("Error finding the item:", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
+      res.status(200).json({ clothing });
+  } catch (error) {
+      console.error("Error finding the item:", error);
+      res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 exports.addItem = async (req, res) => {
   try {
     const { category, subcategory, color, formality, season, cost, size, brand, worn_count } = req.body;
-
-    const filename = req.file.originalname;
-    const contentType = req.file.mimetype;
-    const imageBase64 = req.file.buffer.toString('base64');
 
     // User id comes from authentication middleware
     const user_id = req.id;
@@ -101,7 +108,7 @@ exports.addItem = async (req, res) => {
         message: "Form information missing or user not found",
       })
     } else {
-      const clothing = await Clothing.create({ user_id, category, subcategory, color, formality, season, cost, size, brand, worn_count, filename, contentType, imageBase64 })
+      const clothing = await Clothing.create({ user_id, category, subcategory, color, formality, season, cost, size, brand, worn_count })
       if(clothing) {
         res.status(201).json({
           message: "Clothing successfully created",
@@ -150,8 +157,11 @@ exports.updateItem = async (req, res) => {
     
     await validateItem.save();
 
-    res.json({ message: "Item updated successfully" });
-    
+    res.status(200).json({
+      message: "Clothing successfully updated",
+      id: validateItem._id
+    });
+
   } catch (error) {
     res.status(500).json({
       message: "An error occurred",

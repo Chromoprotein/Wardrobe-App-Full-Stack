@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from 'react';
 import ClothingForm from './ClothingForm';
-import useReturn from '../utils/useReturn';
+import { useNavigate } from "react-router-dom";
 // npm install --save-dev @types/uuid
 import axios from "axios";
 import { FormProp } from "./interfaces/interfaces";
@@ -19,27 +19,16 @@ export default function ClothingFormLogic() {
         cost: "",
         formality: "",
         worn_count: "",
-        img: "",
-        file: null,
-        filename: "",
     }
     const [formState, setFormState] = useState<FormProp>(initialState as FormProp);
     const [isSuccess, setIsSuccess] = useState(false);
-    const returnToFrontPage = useReturn();
+    const navigate = useNavigate();
 
     const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
 
         setFormState((prevState) => ({ ...formState, [name]: value }));
     }
-
-    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
-        if (files) {
-            setFormState((prevState) => ({ ...prevState, "file": files[0] }));
-            setFormState((prevState) => ({ ...prevState, "filename": files[0].name }));
-        }
-    };
 
     const handleAdd = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -65,7 +54,7 @@ export default function ClothingFormLogic() {
             });
             console.log(response.data);
             setIsSuccess(true);
-            returnToFrontPage();
+            navigate(`/uploadImage/${response.data.id}`);
         } catch (error) {
             console.error(error);
         }
@@ -78,8 +67,6 @@ export default function ClothingFormLogic() {
             newClothing={formState}
             handleClothesFormChange={handleFormChange} 
             isSuccess={isSuccess} 
-            handleFileUpload={handleFileUpload}
-            filename={formState.filename}
         />
       </>
     );

@@ -18,8 +18,7 @@ import { PaginationContextProvider } from './contexts/PaginationContext';
 import { OutfitContextProvider } from './contexts/OutfitsContext';
 import ClothingFormLogic from './components/ClothingFormLogic';
 import ClothingEditLogic from './components/ClothingEditLogic';
-import FileUpload from './components/ImageUpload';
-import ImageFetch from './components/ImageFetchTest';
+import UploadImage from './components/uploadImage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,11 +26,10 @@ const router = createBrowserRouter(
       <Route index element={<App />} />
       <Route path="register" element={<Register />} />
       <Route path="edit/:id" element={<ClothingEditLogic/>} />
+      <Route path="uploadImage/:id" element={<UploadImage/>} />
       <Route path="submit" element={<ClothingFormLogic/>} />
       <Route path="login" element={<Login />} />
       <Route path="logout" element={<Logout />} />
-      <Route path="uploadImage/:id" element={<FileUpload />} />
-      <Route path="imageFetch/:id" element={<ImageFetch />} />
       <Route path="*" element={<h1>Page not found</h1>} />
     </Route>
   )

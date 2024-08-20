@@ -25,6 +25,4 @@ export interface FormProp {
   cost: string;
   formality: string;
   worn_count: string;
-  file?: File | null;
-  filename?: string;
 }

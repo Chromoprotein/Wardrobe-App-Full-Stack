@@ -6,6 +6,7 @@ import axios from "axios";
 import { FormProp } from "./interfaces/interfaces";
 import Button from "./Button";
 import useReturn from "utils/useReturn";
+import { useNavigate } from "react-router-dom";
 
 export default function ClothingEditLogic() {
 
@@ -23,8 +24,10 @@ export default function ClothingEditLogic() {
         worn_count: "",
     }
 
+    const navigate = useNavigate();
     const [formState, setFormState] = useState<FormProp>(initialState as FormProp);
     const [loading, setLoading] = useState(true);
+    const [hasUpdates, setHasUpdates] = useState(false);
 
     const [isSuccess, setIsSuccess] = useState(false);
     const [isSuccessDelete, setIsSuccessDelete] = useState(false);
@@ -73,10 +76,17 @@ export default function ClothingEditLogic() {
         const { name, value } = event.target;
 
         setFormState((prevState) => ({ ...formState, [name]: value }));
+
+        if(!hasUpdates) {
+          setHasUpdates(true);
+        }
     }
 
     const handleUpdate = async (e: React.FormEvent) => {
-        e.preventDefault();
+      e.preventDefault();
+
+      // If there are updates, send them to the server, else go to the next part of the form
+      if(hasUpdates) {
         const formData = new FormData();
         for (const key in formState) {
             const value = formState[key as keyof FormProp];
@@ -96,10 +106,13 @@ export default function ClothingEditLogic() {
 
             console.log(response.data);
             setIsSuccess(true);
-            returnToFrontPage();
+            navigate(`/uploadImage/${response.data.id}`);
         } catch (error) {
             console.error(error);
         }
+      } else {
+        navigate(`/uploadImage/${id}`);
+      }
     };
 
     const handleDelete = async (event: React.MouseEvent<HTMLButtonElement>) => {

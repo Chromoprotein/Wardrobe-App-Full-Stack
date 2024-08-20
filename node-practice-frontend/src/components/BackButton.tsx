@@ -5,7 +5,7 @@ import Button from "./Button";
 export default function BackButton() {
     return (
         <Link to={`/`}>
-            <Button children="Return" />
+            <Button>Home</Button>
         </Link>
     );
 };
