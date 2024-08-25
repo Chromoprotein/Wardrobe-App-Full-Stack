@@ -11,7 +11,7 @@ const jwtSecret = process.env.JWT_SECRET;
 exports.register = async (req, res, next) => {
   const { name, email, password } = req.body;
   if (password.length < 6) {
-    return res.status(400).json({ message: "Password less than 6 characters" });
+    return res.status(400).json({ message: "Password should be at least 6 characters long" });
   }
   
   try {
@@ -41,7 +41,7 @@ exports.register = async (req, res, next) => {
     });
   } catch (error) {
     res.status(400).json({
-      message: "User not successfully created",
+      message: "Internal server error",
       error: error.message,
     });
   }
@@ -53,15 +53,14 @@ exports.login = async (req, res, next) => {
     const { email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({
-        message: "Email or Password not present",
+        message: "Login not successful, email or password not present",
       });
     }
 
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({
-        message: "Login not successful",
-        error: "User not found",
+        message: "Login not successful, wrong email or password",
       });
     }
 
@@ -86,11 +85,11 @@ exports.login = async (req, res, next) => {
         user: user._id,
       });
     } else {
-      res.status(400).json({ message: "Login not successful" });
+      res.status(400).json({ message: "Login not successful, wrong email or password" });
     }
   } catch (error) {
     res.status(400).json({
-      message: "An error occurred",
+      message: "An internal server error occurred",
       error: error.message,
     });
   }

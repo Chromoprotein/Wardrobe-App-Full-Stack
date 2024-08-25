@@ -26,3 +26,11 @@ export interface FormProp {
   formality: string;
   worn_count: string;
 }
+
+export interface CustomError {
+  response: {
+    data: {
+      message: string;
+    };
+  };
+}

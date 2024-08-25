@@ -8,6 +8,9 @@ export default function Logout() {
     useEffect(() => {
         async function logout() {
             try {
+                if(!process.env.REACT_APP_LOGOUT_URI) {
+                    return new Error("API URI is not defined")
+                }
                 const response = await axios.post(process.env.REACT_APP_LOGOUT_URI, {}, {
                     withCredentials: true
                 });

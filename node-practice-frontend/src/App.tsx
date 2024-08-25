@@ -12,6 +12,8 @@ import PaginationControls from 'components/PaginationControls';
 import Message from 'components/Message';
 import logo from './img/logo.png';
 import './styles/App.css';
+import axiosInstance from './utils/axiosInstance';
+import Button from 'components/Button';
 
 function App() {
 
@@ -32,10 +34,9 @@ function App() {
         const clothingUri = process.env.REACT_APP_CLOTHING_URI;
 
         if (!clothingUri) {
-          throw new Error("REACT_APP_CLOTHING_URI is not defined");
+          throw new Error("API URI is not defined");
         }
-        const res = await axios.get(clothingUri, { withCredentials: true
-        });
+        const res = await axiosInstance.get(clothingUri);
         setClothes(res.data.clothes);
         console.log(res.data.clothes)
       } catch (err) {
@@ -73,6 +74,9 @@ return (
         <MainMenu/>
         {/*Menu where you can choose filters for clothes*/}
         <ClothingFilters />
+        <Link to={`/logout`}>
+            <Button children="Log out" />
+        </Link>
       </div>
 
       <div className="mainContentWrapper">

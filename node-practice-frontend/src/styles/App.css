@@ -88,7 +88,7 @@ body {
   background-color: var(--extragrey);
   width:100%;
   max-width: 400px;
-  margin: 5px auto;
+  margin: 50px auto;
   padding: 50px;
 }
 /*text input element*/
@@ -304,8 +304,15 @@ input[type="checkbox"]:checked::before, input[type="radio"]:checked::before {
   padding: 10px;
 }
 
+/*text elements*/
 .customLabel {
   display:block;
   text-align: center;
   text-overflow: ellipsis;
+}
+.customTitle {
+  display:block;
+  text-align:center;
+  font-size: 2rem;
+  font-weight: normal;
 }

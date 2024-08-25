@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/react": "^18.3.4",
     "aws-sdk": "^2.1659.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",

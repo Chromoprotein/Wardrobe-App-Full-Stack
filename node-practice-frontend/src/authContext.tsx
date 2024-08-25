@@ -1,17 +1,27 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
 
+// Define the shape of the context
+interface AuthContextType {
+  isAuthenticated: boolean;
+  loading: boolean;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
+}
+
 // Creating the context
-const AuthContext = createContext();
+const AuthContext = createContext<AuthContextType | null>(null);
 
 // Provider component
-export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(sessionStorage.getItem('isAuthenticated') === 'true');
-  const [loading, setLoading] = useState(true);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(sessionStorage.getItem('isAuthenticated') === 'true');
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
+        if (!process.env.REACT_APP_USERSTATUS_URI) {
+          throw new Error('REACT_APP_USERSTATUS_URI is not defined');
+        }
         const response = await axios.get(process.env.REACT_APP_USERSTATUS_URI, { withCredentials: true });
         const isAuthenticated = response.data.isAuthenticated;
         setIsAuthenticated(isAuthenticated);
@@ -40,6 +50,10 @@ export const AuthProvider = ({ children }) => {
 };
 
 // Hook to use authentication context
-export const useAuth = () => {
-  return useContext(AuthContext);
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };

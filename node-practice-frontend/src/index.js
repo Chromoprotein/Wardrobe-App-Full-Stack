@@ -7,10 +7,10 @@ import {
   RouterProvider,
   createRoutesFromElements
 } from "react-router-dom";
-import Register from './Register';
-import Login from './Login';
+import Register from './components/Register';
+import Login from './components/Login';
 import App from './App';
-import Logout from './Logout';
+import Logout from './components/Logout';
 import { useAuth, AuthProvider } from './authContext';
 import { ClothingContextProvider } from './contexts/ClothingContext';
 import { FilterContextProvider } from './contexts/FilterContext';
@@ -19,6 +19,7 @@ import { OutfitContextProvider } from './contexts/OutfitsContext';
 import ClothingFormLogic from './components/ClothingFormLogic';
 import ClothingEditLogic from './components/ClothingEditLogic';
 import UploadImage from './components/uploadImage';
+import Landing from './components/Landing';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
       <Route path="submit" element={<ClothingFormLogic/>} />
       <Route path="login" element={<Login />} />
       <Route path="logout" element={<Logout />} />
+      <Route path="landing" element={<Landing/>} />
       <Route path="*" element={<h1>Page not found</h1>} />
     </Route>
   )
