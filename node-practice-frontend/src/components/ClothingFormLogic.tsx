@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 // npm install --save-dev @types/uuid
 import axios from "axios";
 import { FormProp } from "./interfaces/interfaces";
+import { navigateWithTimeout } from "utils/navigateWithTimeout";
+import { CustomError } from "./interfaces/interfaces";
 
 export default function ClothingFormLogic() {
 
@@ -23,6 +25,8 @@ export default function ClothingFormLogic() {
     const [formState, setFormState] = useState<FormProp>(initialState as FormProp);
     const [isSuccess, setIsSuccess] = useState(false);
     const navigate = useNavigate();
+
+    const [message, setMessage] = useState<string>("");
 
     const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
@@ -54,9 +58,11 @@ export default function ClothingFormLogic() {
             });
             console.log(response.data);
             setIsSuccess(true);
-            navigate(`/uploadImage/${response.data.id}`);
+            setMessage(response.data.message);
+            navigateWithTimeout(navigate, `/uploadImage/${response.data.id}`);
         } catch (error) {
-            console.error(error);
+            const err = error as CustomError;
+            setMessage("Error: " + err.response.data.message);
         }
     };
     
@@ -67,6 +73,7 @@ export default function ClothingFormLogic() {
             newClothing={formState}
             handleClothesFormChange={handleFormChange} 
             isSuccess={isSuccess} 
+            message={message}
         />
       </>
     );

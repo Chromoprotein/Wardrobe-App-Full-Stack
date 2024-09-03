@@ -27,6 +27,12 @@ export interface FormProp {
   worn_count: string;
 }
 
+export interface UserFormProp {
+  name?: string;
+  email: string;
+  password: string;
+}
+
 export interface CustomError {
   response: {
     data: {

@@ -1,17 +1,28 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useCookies } from "react-cookie";
-import { InputField } from './FormComponents';
-import Button from './Button';
+import useReturn from '../utils/useReturn';
+import { useAuth } from '../authContext';
+import { CustomError } from './interfaces/interfaces';
+import { UserFormProp } from './interfaces/interfaces';
+import UserForm from './UserForm';
 
 export default function Register() {
   const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UserFormProp>({
     name: '',
     email: '',
     password: '',
   });
+
+  const [message, setMessage] = useState<string>("");
+  const returnToFrontPage = useReturn();
+  const { isAuthenticated, loading, setIsAuthenticated } = useAuth();
+
+  const resetMessage = () => {
+    setMessage("");
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -32,24 +43,20 @@ export default function Register() {
           const token = response.data.jwt;
           setCookie('jwt', token, { path: '/', secure: true, httpOnly: true }); // Set the JWT token as a cookie
           console.log(response.data)
+
+          setMessage(response.data.message)
+          setIsAuthenticated(true);
+          sessionStorage.setItem('isAuthenticated', 'true');
+          returnToFrontPage();
       }
     } catch (error) {
       console.error(error);
+      const err = error as CustomError;
+      setMessage("Error: " + err.response.data.message);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="formWrapper">
-
-      <h1 className="customTitle">Register</h1>
-
-      <InputField name="name" menuState={formData.name} type="text" placeholder="Username" eventHandler={handleChange} />
-
-      <InputField name="email" menuState={formData.email} type="text" placeholder="Email" eventHandler={handleChange} />
-
-      <InputField name="password" menuState={formData.password} type="password" placeholder="Password" eventHandler={handleChange} />
-
-      <Button actionType="submit">Register</Button>
-    </form>
+    <UserForm title="Register" handleSubmit={handleSubmit} formData={formData} handleChange={handleChange} message={message} resetMessage={resetMessage} />
   );
 };

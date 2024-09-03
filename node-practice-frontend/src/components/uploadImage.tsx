@@ -4,6 +4,8 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import useReturn from "utils/useReturn";
 import BackButton from "./BackButton";
+import { CustomError } from "./interfaces/interfaces";
+import Message from "./Message";
 
 interface FormProp {
     file: null | File;
@@ -21,6 +23,9 @@ export default function UploadImage() {
         filename: "",
     }
     const [formState, setFormState] = useState<FormProp>(initialState as FormProp);
+
+    const [message, setMessage] = useState<string>("");
+    const [isSuccess, setisSuccess] = useState<boolean>(false);
 
     const isDisabled = !Object.values(formState).every(value => value);
 
@@ -41,6 +46,7 @@ export default function UploadImage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
         const formData = new FormData();
         for (const key in formState) {
             const value = formState[key as keyof FormProp];
@@ -62,10 +68,14 @@ export default function UploadImage() {
                 }, 
                 withCredentials: true,
             });
+            setisSuccess(true);
             console.log(response.data);
+            setMessage(response.data.message);
             returnToFrontPage();
+
         } catch (error) {
-            console.error(error);
+            const err = error as CustomError;
+            setMessage("Error: " + err.response.data.message);
         }
     };
 
@@ -87,7 +97,10 @@ export default function UploadImage() {
                 </label>
             }
 
-            <Button actionType="submit" isDisabled={isDisabled}>Submit</Button>
+            <Button actionType="submit" isDisabled={isDisabled} isSuccess={isSuccess}>Submit</Button>
+
+            {message && <Message>{message}</Message>}
+
             <BackButton/>
         </form>
 

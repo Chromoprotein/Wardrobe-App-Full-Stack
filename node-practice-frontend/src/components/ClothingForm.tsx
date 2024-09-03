@@ -9,15 +9,17 @@ import { seasons } from "../dummyData/seasonsArray";
 import { sizes } from "../dummyData/sizesArray";
 import Button from "./Button";
 import { FormProp } from "./interfaces/interfaces";
+import Message from "./Message";
 
 interface FormProps {
   handleClothingSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   newClothing: FormProp;
   handleClothesFormChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   isSuccess?: boolean;
+  message: string;
 }
 
-export default function ClothingForm({ handleClothingSubmit, newClothing, handleClothesFormChange, isSuccess }: FormProps) {
+export default function ClothingForm({ handleClothingSubmit, newClothing, handleClothesFormChange, isSuccess, message }: FormProps) {
 
     // Submit button
     const isDisabled = !Object.values(newClothing).every(value => value);
@@ -45,6 +47,8 @@ export default function ClothingForm({ handleClothingSubmit, newClothing, handle
           <InputField name="worn_count" menuState={newClothing.worn_count} eventHandler={handleClothesFormChange} type="number" placeholder="10"/>
 
           <Button isDisabled={isDisabled} actionType="submit" isSuccess={isSuccess}>Save & Next</Button>
+
+          {message && <Message>{message}</Message>}
     
         </form>
 

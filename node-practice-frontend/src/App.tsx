@@ -14,10 +14,15 @@ import logo from './img/logo.png';
 import './styles/App.css';
 import axiosInstance from './utils/axiosInstance';
 import Button from 'components/Button';
+import Spinner from 'components/Spinner';
+import { CustomError } from 'components/interfaces/interfaces';
+import Landing from 'components/Landing';
+import { useAuth } from 'authContext';
 
 function App() {
 
-  const [loading, setLoading] = useState(true);
+  const [loadingClothes, setLoadingClothes] = useState<boolean>(true);
+  const [message, setMessage] = useState<string>("");
 
   // clothes = original clothing array
   const { clothes, setClothes } = useClothingContext();
@@ -27,6 +32,8 @@ function App() {
 
   // currentItems = function that slices the clothes/outfits array for pagination purposes
   const { currentItems } = usePaginationContext();
+
+  const { isAuthenticated, loading, setIsAuthenticated } = useAuth();
 
   useEffect(() => {
     const getClothes = async () => {
@@ -39,19 +46,22 @@ function App() {
         const res = await axiosInstance.get(clothingUri);
         setClothes(res.data.clothes);
         console.log(res.data.clothes)
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        const err = error as CustomError;
+        setMessage("Error: " + err.response.data.message);
       } finally {
-        setLoading(false); // Set loading to false after fetching data
+        setLoadingClothes(false); // Set loading to false after fetching data
       }
     }
     getClothes();
     
   }, [setClothes])
 
-  if (loading) return <p>Loading...</p>;
+  if (loadingClothes || loading ) return <Spinner />;
 
-  if (!clothes) return <p>No clothes available</p>
+  if (!isAuthenticated) return <Landing />
+
+  if (!clothes) return <Message>No clothes available</Message>
 
   // Apply filters on clothes and map them
   const mapClothes: JSX.Element[] = filteredClothes(clothes)
@@ -65,7 +75,7 @@ function App() {
   // Pagination
   const paginatedItems: JSX.Element[] = currentItems(mapClothes);
 
-return (
+  return (
     <div className="mainPageWrapper">
 
       <div className="navbarWrapper">
@@ -91,8 +101,9 @@ return (
             <PaginationControls clothes={mapClothes} />
           </>
         ) : (
-          <Message children="No clothes available. Add clothes or reduce filters."/>
+          <Message>No clothes available. Add clothes or reduce filters.</Message>
         )}
+        {message && <Message>{message}</Message>}
       </div>
 
     </div>

@@ -7,32 +7,37 @@ import { FormProp } from "./interfaces/interfaces";
 import Button from "./Button";
 import useReturn from "utils/useReturn";
 import { useNavigate } from "react-router-dom";
+import { navigateWithTimeout } from "utils/navigateWithTimeout";
+import { CustomError } from "./interfaces/interfaces";
+import Spinner from "./Spinner";
 
 export default function ClothingEditLogic() {
 
-    // Get the URL id when editing clothes
-    const { id } = useParams();
-    const initialState = {
-        category: "",
-        subcategory: "",
-        brand: "",
-        color: "",
-        size: "",
-        season: "",
-        cost: "",
-        formality: "",
-        worn_count: "",
-    }
+  // Get the URL id when editing clothes
+  const { id } = useParams();
+  const initialState = {
+      category: "",
+      subcategory: "",
+      brand: "",
+      color: "",
+      size: "",
+      season: "",
+      cost: "",
+      formality: "",
+      worn_count: "",
+  }
 
-    const navigate = useNavigate();
-    const [formState, setFormState] = useState<FormProp>(initialState as FormProp);
-    const [loading, setLoading] = useState(true);
-    const [hasUpdates, setHasUpdates] = useState(false);
+  const navigate = useNavigate();
+  const [formState, setFormState] = useState<FormProp>(initialState as FormProp);
+  const [loading, setLoading] = useState(true);
+  const [hasUpdates, setHasUpdates] = useState(false);
 
-    const [isSuccess, setIsSuccess] = useState(false);
-    const [isSuccessDelete, setIsSuccessDelete] = useState(false);
-    // Return to front page
-    const returnToFrontPage = useReturn();
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isSuccessDelete, setIsSuccessDelete] = useState(false);
+  const [message, setMessage] = useState<string>("");
+
+  // Return to front page
+  const returnToFrontPage = useReturn();
 
   useEffect(() => {
     const getItemById = async () => {
@@ -60,17 +65,18 @@ export default function ClothingEditLogic() {
             worn_count: newData.worn_count,
         })
 
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        const err = error as CustomError;
+        setMessage("Error: " + err.response.data.message);
       } finally {
         setLoading(false); // Set loading to false after fetching data
       }
     }
     getItemById();
     
-  }, [setFormState, id])
+  }, [setFormState, id, message])
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Spinner />;
   
     const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
@@ -106,9 +112,11 @@ export default function ClothingEditLogic() {
 
             console.log(response.data);
             setIsSuccess(true);
-            navigate(`/uploadImage/${response.data.id}`);
+            setMessage(response.data.message);
+            navigateWithTimeout(navigate, `/uploadImage/${response.data.id}`);
         } catch (error) {
-            console.error(error);
+            const err = error as CustomError;
+            setMessage("Error: " + err.response.data.message);
         }
       } else {
         navigate(`/uploadImage/${id}`);
@@ -129,9 +137,12 @@ export default function ClothingEditLogic() {
 
             console.log(response.data);
             setIsSuccessDelete(true);
+            setMessage(response.data.message);
             returnToFrontPage();
         } catch (error) {
-            console.error('Error deleting item:', error);
+            setIsSuccess(false);
+            const err = error as CustomError;
+            setMessage("Error: " + err.response.data.message);
         }
         
     };
@@ -143,6 +154,7 @@ export default function ClothingEditLogic() {
             newClothing={formState}
             handleClothesFormChange={handleFormChange} 
             isSuccess={isSuccess} 
+            message={message}
         />
 
         <div className="mainContentWrapper">
