@@ -12,27 +12,37 @@ const jwtSecret = process.env.JWT_SECRET;
 
 exports.uploadImage = async (req, res) => {
 
-  const filename = req.file.originalname;
-  const contentType = req.file.mimetype;
-  const imageBase64 = req.file.buffer.toString('base64');
-  const userId = req.id;
-  const clothingId = req.params.id;
+  try {
+    const filename = req.file.originalname;
+    const contentType = req.file.mimetype;
+    const imageBase64 = req.file.buffer.toString('base64');
+    const userId = req.id;
+    const clothingId = req.params.id;
 
-  // Check that the clothing document exists and belongs to the user
-  const validateItem = await Clothing.findOne({ _id: clothingId, user_id: userId });
-  if (!validateItem) {
-    return res.status(404).json({ message: "Item not found for this user" });
+    // Check that the clothing document exists and belongs to the user
+    const validateItem = await Clothing.findOne({ _id: clothingId, user_id: userId });
+    if (!validateItem) {
+      return res.status(404).json({ message: "Item not found for this user" });
+    }
+
+    // Update the book details
+    validateItem.filename = filename;
+    validateItem.contentType = contentType;
+    validateItem.imageBase64 = imageBase64;
+    
+    await validateItem.save();
+
+    res.status(200).json({
+      message: "Clothing successfully updated",
+      id: validateItem._id
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred",
+      error: error.message,
+    });
   }
-
-  // Update the book details
-  validateItem.filename = filename;
-  validateItem.contentType = contentType;
-  validateItem.imageBase64 = imageBase64;
   
-  await validateItem.save();
-
-  res.json({ message: "Item updated successfully" });
-
 }
 
 //exports.fetchImageById = async (req, res) => {

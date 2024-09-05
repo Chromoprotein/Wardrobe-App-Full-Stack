@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { navigateWithTimeout } from "utils/navigateWithTimeout";
 import { CustomError } from "./interfaces/interfaces";
 import Spinner from "./Spinner";
+import { clothingCategories } from "dummyData/subcategoryArray";
 
 export default function ClothingEditLogic() {
 
@@ -29,12 +30,17 @@ export default function ClothingEditLogic() {
 
   const navigate = useNavigate();
   const [formState, setFormState] = useState<FormProp>(initialState as FormProp);
-  const [loading, setLoading] = useState(true);
-  const [hasUpdates, setHasUpdates] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [hasUpdates, setHasUpdates] = useState<boolean>(false);
 
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isSuccessDelete, setIsSuccessDelete] = useState(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [isSuccessDelete, setIsSuccessDelete] = useState<boolean>(false);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
+
+  //Clothing categories
+  const mainCategories = Object.keys(clothingCategories);
+  const [subCategories, setSubCategories] = useState<string[]>(clothingCategories[formState.category]);
 
   // Return to front page
   const returnToFrontPage = useReturn();
@@ -64,6 +70,7 @@ export default function ClothingEditLogic() {
             formality: newData.formality,
             worn_count: newData.worn_count,
         })
+        setSubCategories(clothingCategories[newData.category as keyof typeof clothingCategories] || []);
 
       } catch (error) {
         const err = error as CustomError;
@@ -79,17 +86,27 @@ export default function ClothingEditLogic() {
   if (loading) return <Spinner />;
   
     const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = event.target;
+      const { name, value } = event.target;
 
-        setFormState((prevState) => ({ ...formState, [name]: value }));
+      setFormState((prevState) => ({ ...formState, [name]: value }));
 
-        if(!hasUpdates) {
-          setHasUpdates(true);
-        }
+      //Update visible subcategories when main category changes
+      if(name === "category") {
+          setSubCategories(clothingCategories[value as keyof typeof clothingCategories] || []);
+          setFormState((prevState) => ({ ...prevState, subcategory: "" })); // Reset subcategory when changing category
+      }
+
+      if(!hasUpdates) {
+        setHasUpdates(true);
+      }
+
+      const isDisabledChange = !Object.values(formState).every(value => value);
+      setIsDisabled(isDisabledChange);
     }
 
     const handleUpdate = async (e: React.FormEvent) => {
       e.preventDefault();
+      setIsDisabled(true);
 
       // If there are updates, send them to the server, else go to the next part of the form
       if(hasUpdates) {
@@ -117,6 +134,7 @@ export default function ClothingEditLogic() {
         } catch (error) {
             const err = error as CustomError;
             setMessage("Error: " + err.response.data.message);
+            setIsDisabled(false);
         }
       } else {
         navigate(`/uploadImage/${id}`);
@@ -125,6 +143,7 @@ export default function ClothingEditLogic() {
 
     const handleDelete = async (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
+        setIsDisabled(true);
         
         try {
 
@@ -143,6 +162,7 @@ export default function ClothingEditLogic() {
             setIsSuccess(false);
             const err = error as CustomError;
             setMessage("Error: " + err.response.data.message);
+            setIsDisabled(false);
         }
         
     };
@@ -155,6 +175,9 @@ export default function ClothingEditLogic() {
             handleClothesFormChange={handleFormChange} 
             isSuccess={isSuccess} 
             message={message}
+            isDisabled={isDisabled}
+            mainCategories={mainCategories}
+            subCategories={subCategories}
         />
 
         <div className="mainContentWrapper">

@@ -26,16 +26,20 @@ interface ColorPickerType {
 export function SelectMenu({ name, menuState, inputArray, eventHandler }: SelectMenuType) {
 
     return (
-        <select className={menuState ? 'bigButton selectedStyle' : 'bigButton idleStyle'} value={menuState} name={name} onChange={eventHandler}>
-        <option value="" disabled selected>
-            {capitalize(name)}
-        </option>
-        {inputArray.map((formality) => (
-            <option key={formality} value={formality}>
-            {capitalize(formality)}
-            </option>
-        ))}
-        </select>
+        <>
+            {inputArray &&
+                <select className={menuState ? 'bigButton selectedStyle' : 'bigButton idleStyle'} value={menuState} name={name} onChange={eventHandler}>
+                    <option value="" disabled selected>
+                        {capitalize(name)}
+                    </option>
+                    {inputArray.map((formality) => (
+                        <option key={formality} value={formality}>
+                        {capitalize(formality)}
+                        </option>
+                    ))}
+                </select>
+            }
+        </>
     );
 
 };

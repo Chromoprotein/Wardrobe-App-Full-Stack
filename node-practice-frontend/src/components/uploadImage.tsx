@@ -27,13 +27,14 @@ export default function UploadImage() {
     const [message, setMessage] = useState<string>("");
     const [isSuccess, setisSuccess] = useState<boolean>(false);
 
-    const isDisabled = !Object.values(formState).every(value => value);
+    const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (files && files.length > 0) {
             setFormState((prevState) => ({ ...prevState, "file": files[0] }));
             setFormState((prevState) => ({ ...prevState, "filename": files[0].name }));
+            setIsDisabled(false);
         }
     };
 
@@ -46,6 +47,7 @@ export default function UploadImage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsDisabled(true);
         
         const formData = new FormData();
         for (const key in formState) {
@@ -76,6 +78,7 @@ export default function UploadImage() {
         } catch (error) {
             const err = error as CustomError;
             setMessage("Error: " + err.response.data.message);
+            setIsDisabled(false);
         }
     };
 

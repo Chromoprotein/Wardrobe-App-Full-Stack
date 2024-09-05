@@ -21,37 +21,44 @@ export default function Login() {
     setMessage("");
   }
 
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-  };
+
+    const disabledChange = !Object.values(formData).every(value => value);
+    setIsDisabled(disabledChange)
+;  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      try {
-        if(!process.env.REACT_APP_LOGIN_URI) {
-          return new Error("API URI not defined");
-        }
-          const response = await axios.post(
-            process.env.REACT_APP_LOGIN_URI,
-            formData,
-            { withCredentials: true }
-          );
-          if (response.status === 201) {
-              setIsAuthenticated(true);
-              sessionStorage.setItem('isAuthenticated', 'true');
-              setMessage(response.data.message)
-              returnToFrontPage();
-          }
-      } catch (error) {
-        const err = error as CustomError;
-        setMessage("Error: " + err.response.data.message);
+    setIsDisabled(true);
+    e.preventDefault();
+    try {
+      if(!process.env.REACT_APP_LOGIN_URI) {
+        return new Error("API URI not defined");
       }
+        const response = await axios.post(
+          process.env.REACT_APP_LOGIN_URI,
+          formData,
+          { withCredentials: true }
+        );
+        if (response.status === 201) {
+            setIsAuthenticated(true);
+            sessionStorage.setItem('isAuthenticated', 'true');
+            setMessage(response.data.message)
+            returnToFrontPage();
+        }
+    } catch (error) {
+      const err = error as CustomError;
+      setMessage("Error: " + err.response.data.message);
+      setIsDisabled(false);
+    }
   };
 
   return (
-    <UserForm title="Log in" handleSubmit={handleSubmit} formData={formData} handleChange={handleChange} message={message} resetMessage={resetMessage} />
+    <UserForm title="Log in" handleSubmit={handleSubmit} formData={formData} handleChange={handleChange} message={message} resetMessage={resetMessage} isDisabled={isDisabled} />
   );
 };

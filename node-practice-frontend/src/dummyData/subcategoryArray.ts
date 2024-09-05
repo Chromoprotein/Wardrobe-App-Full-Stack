@@ -1,3 +1,8 @@
-const subcategory: string[] = ["shorts", "jeans", "pants", "skirt", "shirt", "blouse", "sweater", "dress", "jacket", "coat", "cardigan", "tights", "leggings", "socks"];
-
-export default subcategory;
+export const clothingCategories = {
+    tops: ["shirt", "blouse", "sweater"],
+    bottoms: ["shorts", "jeans", "pants", "skirt", "leggings"],
+    onePieces: ["dress"],
+    layeringPieces: ["cardigan"],
+    outerwear: ["jacket", "coat"],
+    accessories: ["socks"]
+}

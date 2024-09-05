@@ -1,9 +1,8 @@
 To do list
 
 User experience things:
-- prevent double button clicks
 - Restrictions on image size
-- Show only relevant subcategories in the form
+- Reduce the amount of mandatory input
 
 Features:
 - Generate outfits

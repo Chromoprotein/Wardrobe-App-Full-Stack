@@ -20,6 +20,8 @@ export default function Register() {
   const returnToFrontPage = useReturn();
   const { isAuthenticated, loading, setIsAuthenticated } = useAuth();
 
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+
   const resetMessage = () => {
     setMessage("");
   }
@@ -29,10 +31,14 @@ export default function Register() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+
+    const disabledChange = !Object.values(formData).every(value => value);
+    setIsDisabled(disabledChange)
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsDisabled(true);
     try {
       if(!process.env.REACT_APP_REGISTER_URI) {
         return new Error("API URI not defined");
@@ -53,10 +59,11 @@ export default function Register() {
       console.error(error);
       const err = error as CustomError;
       setMessage("Error: " + err.response.data.message);
+      setIsDisabled(false);
     }
   };
 
   return (
-    <UserForm title="Register" handleSubmit={handleSubmit} formData={formData} handleChange={handleChange} message={message} resetMessage={resetMessage} />
+    <UserForm title="Register" handleSubmit={handleSubmit} formData={formData} handleChange={handleChange} message={message} resetMessage={resetMessage} isDisabled={isDisabled} />
   );
 };

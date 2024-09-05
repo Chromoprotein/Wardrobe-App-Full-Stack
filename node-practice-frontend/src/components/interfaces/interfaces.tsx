@@ -1,3 +1,5 @@
+import { clothingCategories } from "dummyData/subcategoryArray";
+
 export interface ClothingProp { 
   _id: string;
   category: string;
@@ -16,7 +18,7 @@ export interface ClothingProp {
 }
 
 export interface FormProp {
-  category: string;
+  category: keyof typeof clothingCategories;
   subcategory: string;
   brand: string;
   color: string;

@@ -12,11 +12,10 @@ interface UserFormProps {
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     message?: string;
     resetMessage: () => void;
+    isDisabled: boolean;
 }
 
-export default function UserForm({title, handleSubmit, formData, handleChange, message, resetMessage}: UserFormProps) {
-
-    const isDisabled = !Object.values(formData).every(value => value);
+export default function UserForm({title, handleSubmit, formData, handleChange, message, resetMessage, isDisabled}: UserFormProps) {
 
     return (
         <div className="formWrapper">
