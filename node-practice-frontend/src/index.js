@@ -20,6 +20,7 @@ import ClothingFormLogic from './components/ClothingFormLogic';
 import ClothingEditLogic from './components/ClothingEditLogic';
 import UploadImage from './components/uploadImage';
 import Landing from './components/Landing';
+import GenerateOutfits from './components/GenerateOutfits';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,7 +32,9 @@ const router = createBrowserRouter(
       <Route path="submit" element={<ClothingFormLogic/>} />
       <Route path="login" element={<Login />} />
       <Route path="logout" element={<Logout />} />
-      <Route path="landing" element={<Landing/>} />
+      <Route path="landing" element={<Landing />} />
+      {/*<Route path="outfits" element={<SavedOutfits/>} />*/}
+      <Route path="generate" element={<GenerateOutfits/>} />
       <Route path="*" element={<h1>Page not found</h1>} />
     </Route>
   )

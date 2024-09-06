@@ -1,80 +1,52 @@
-import { ClothingProp } from "../components/interfaces/interfaces";
+import { ClothingProp } from "components/interfaces/interfaces";
+import { clothingCategories } from "dummyData/subcategoryArray";
 
-type Categories = {
-  [key: string]: string[];
-};
-
-// Define a type for the clothingItems object
-type ClothingItems = {
-  [category: string]: ClothingProp[];
-};
-
-// Define the return type of the outfitsRandomizer function
 type OutfitsRandomizerReturnType = {
   randomOutfit: ClothingProp[];
   errorMessage: string;
 };
 
-export const outfitsRandomizer = (clothesForOutfitGeneration: ClothingProp[]): OutfitsRandomizerReturnType => {
+export const outfitsRandomizer = (wardrobe: ClothingProp[]): OutfitsRandomizerReturnType => {
+    const categories = Object.keys(clothingCategories);
 
-    let errorMessage = "";
-
-    // Function that makes arrays for different categories
-    const filterArray = (array: ClothingProp[], ...queries: string[]): ClothingProp[] => {
-        return array.filter((item) => queries.includes(item.category));
-    };
-
-    // Generic randomizing function that takes an array and returns an item
-    const randomItem = (arr: ClothingProp[]): ClothingProp => {
-        return arr[Math.floor(Math.random() * arr.length)];
-    }
-
-    const categories: Categories = {
-        topsAndDresses: ["shirt", "dress"],
-        hosiery: ["leggings", "tights", "socks"],
-        bottoms: ["skirt", "pants"],
-        shirts: ["shirt"],
-        layers: ["jacket", "cardigan", "sweater"]
-    };
-
-    // Filter the clothesForOutfitGeneration into their respective categories
-    // For each key (category), add a property with the category's name to the clothingItems object. The property's value is the filtered array
-    const clothingItems: ClothingItems = {};
-    Object.keys(categories).forEach(category => {
-        clothingItems[category] = filterArray(clothesForOutfitGeneration, ...categories[category]);
-    });
-
-    // Save clothing pieces here for the outfit
     const randomOutfit: ClothingProp[] = [];
 
-    // Choose a random top or a dress
-    if(clothingItems.topsAndDresses.length > 0) {
-        const randomTop = randomItem(clothingItems.topsAndDresses);
-        randomOutfit.push(randomTop);
+    let errorMessages: string[] = [];
 
-        //If the selected is a dress, choose leggings, tights, or socks
-        if(randomTop.category === 'dress' && clothingItems.hosiery.length > 0) {
-            const randomHosiery = randomItem(clothingItems.hosiery);
-            randomOutfit.push(randomHosiery);
-        }
-        else if (clothingItems.bottoms.length > 0) { //If the selected is a top, choose a skirt or pants
-            const randomBottom = randomItem(clothingItems.bottoms);
-            randomOutfit.push(randomBottom);
-        }
-        else {
-            errorMessage = "You haven't added enough bottoms to make an outfit. Add more clothes or reduce filters.";
-        }
+    let isDressSelected = false;
 
-        // Choose a layering piece if available
-        if (clothingItems.layers.length > 0) { 
-            const randomLayer = randomItem(clothingItems.layers);
-            randomOutfit.push(randomLayer);
-        }
+    // Helper function that filters the wardrobe down to a category and selects a random item from the category, returns the item or null
+    const getRandomItemFromCategory = (wardrobe: ClothingProp[], category: string): ClothingProp | null => {
+        const itemsInCategory = wardrobe.filter((item) => item.category === category);
+        if (itemsInCategory.length === 0) return null;
+        return itemsInCategory[Math.floor(Math.random() * itemsInCategory.length)];
+    };
 
+    // First, check for a dress or other one-piece
+    const dressItems = wardrobe.filter((item) => item.category === 'onePieces');
+
+    // 50% chance to select a dress
+    if (dressItems.length > 0 && Math.random() > 0.5) {
+        const randomDress = dressItems[Math.floor(Math.random() * dressItems.length)];
+        randomOutfit.push(randomDress);
+        isDressSelected = true;
     }
-    else {
-        errorMessage = "You haven't added enough tops or dresses to make an outfit. Add more clothes or reduce filters.";
-    }
-    
-    return { randomOutfit, errorMessage };
-}
+
+    // Filter categories
+    const filteredCategories = categories.filter((category) => 
+    !(isDressSelected && (category === 'bottom' || category === 'top')) && category !== 'dresses'
+    );
+
+    // Randomly select from remaining categories
+    filteredCategories.forEach((category) => {
+        const randomItem = getRandomItemFromCategory(wardrobe, category);
+        if (!randomItem) {
+            errorMessages.push(`No items available for the category "${category}".`);
+        } else {
+            randomOutfit.push(randomItem);
+        }
+    });
+
+    return { randomOutfit, errorMessage: errorMessages.join(' ') || '' };
+
+};
