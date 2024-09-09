@@ -6,20 +6,8 @@ const outfitSchema = new Schema({
         type:String,
         required:true
     },
-    clothing_ids: {
+    ids: {
         type:Array,
-        required:true
-    },
-    formality: {
-        type:String,
-        required:true
-    },
-    season: {
-        type:String,
-        required:true
-    },
-    worn: {
-        type:Number,
         required:true
     }
 },{collection : 'outfits'})

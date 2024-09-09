@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ClothingFilters from "./ClothingFilters";
 import ClothingCard from "./ClothingCard";
 import { outfitsRandomizer } from "../utils/outfitsRandomizer";
@@ -7,17 +7,27 @@ import BackButton from "./BackButton";
 import Button from "./Button";
 import Message from "./Message";
 import { useOutfitContext } from "../contexts/OutfitsContext";
-import { useClothingContext } from "../contexts/ClothingContext";
 import { useFilterContext } from "../contexts/FilterContext";
+import Spinner from "./Spinner";
+import useWardrobe from "utils/useWardrobe";
+import { OutfitsRandomizerReturnType } from "../utils/outfitsRandomizer";
+import Logo from "./Logo";
+import axios from "axios";
+import { CustomError } from "./interfaces/interfaces";
 
 export default function GenerateOutfits() {
 
     // State for randomly generated outfits saved by the user
     const { savedOutfits, setSavedOutfits } = useOutfitContext();
-    const [isSuccess, setIsSuccess] = useState(false);
+    const [isSuccess, setIsSuccess] = useState<boolean>(false);
+    const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
-    // State for the all clothing pieces array
-    const { clothes } = useClothingContext();
+    const { loadingClothes, message, setMessage, clothes, getClothes } = useWardrobe();
+
+    // Get the clothes of the wardrobe from custom hook
+    useEffect(() => {
+        getClothes();
+    }, [getClothes]);
 
     // Filter function for filtering clothes
     const { filteredClothes } = useFilterContext();
@@ -26,15 +36,23 @@ export default function GenerateOutfits() {
 
     // State for the randomly generated outfit and for the error message
     // values: randomOutfit, errorMessage
-    const [outfit, setOutfit] = useState(() => 
-    clothesForOutfitGeneration.length > 0 
-        ? outfitsRandomizer(clothesForOutfitGeneration) 
-        : null // or a fallback value, e.g., an empty outfit
-    );
+    const [outfit, setOutfit] = useState<null | OutfitsRandomizerReturnType>(null);
 
-    // Generate random outfit
+    // When the clothes for outfit generation have been fetched, generate an outfit automatocally. !outfit ensures only one is generated at a time
+    useEffect(() => {
+        if (clothesForOutfitGeneration.length > 0 && !outfit) {
+            const newOutfit = outfitsRandomizer(clothesForOutfitGeneration);
+            setOutfit(newOutfit);
+        }
+    }, [clothesForOutfitGeneration, outfit]);
+
+    if (loadingClothes ) return <Spinner />;
+
+    // Generate random outfit by button press
     const handleGenerateOutfit = () => {
         setIsSuccess(false);
+        setIsDisabled(false);
+        setMessage("");
         const { randomOutfit, errorMessage } = outfitsRandomizer(clothesForOutfitGeneration);
 
         setOutfit(prevOutfit => ({
@@ -53,16 +71,40 @@ export default function GenerateOutfits() {
         )
     );
 
-    const saveOutfit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        if(outfit) {
+    const saveOutfit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        if (outfit && outfit.randomOutfit.length > 0) {
             const ids = outfit.randomOutfit.map(piece => piece._id);
-            if(savedOutfits) {
-                setSavedOutfits([...savedOutfits, ids]);
-            } else {
-                setSavedOutfits([ids]);
+            setIsDisabled(true);
+
+            try {
+                const addOutfitUri = process.env.REACT_APP_ADD_OUTFIT_URI;
+
+                if (!addOutfitUri) {
+                    throw new Error("URI is not defined");
+                }
+
+                const response = await axios.post(addOutfitUri, { ids }, {
+                    withCredentials: true,
+                });
+                console.log(response.data);
+                setIsSuccess(true);
+                setMessage(response.data.message);
+
+                // Save to state
+                if(savedOutfits) {
+                    setSavedOutfits([...savedOutfits, ids]);
+                } else {
+                    setSavedOutfits([ids]);
+                }
+            } catch (error) {
+                const err = error as CustomError;
+                const errorMessage = err.response?.data?.message || "An unknown error occurred"; 
+                setMessage("Error: " + errorMessage);
+                setIsDisabled(false);
             }
-            setIsSuccess(true);
-            console.log(ids)
+
+        } else {
+            setMessage("Error: Outfit or pieces are missing");
         }
 
     }
@@ -71,13 +113,14 @@ export default function GenerateOutfits() {
         <div className="mainPageWrapper">
             <div className="navbarWrapper">
 
+                <Logo/>
                 <ClothingFilters />
 
-                <Button children="Re-generate Outfit" eventHandler={handleGenerateOutfit} />
+                <Button children="Generate Outfit" eventHandler={handleGenerateOutfit} />
 
                 {/*If an outfit has been generated, show the save button*/}
-                {outfit && outfit.errorMessage.length === 0 && 
-                    <Button children="Save Outfit" isSuccess={isSuccess} eventHandler={saveOutfit} />
+                {outfit && 
+                    <Button children="Save Outfit" isSuccess={isSuccess} eventHandler={saveOutfit} isDisabled={isDisabled} />
                 }
 
                 <BackButton />
@@ -86,8 +129,9 @@ export default function GenerateOutfits() {
             <div className="mainContentWrapper">
                 <div className="clothingCardContainer">
                     {mapOutfit && mapOutfit}
-                    {outfit && outfit.errorMessage.length > 0 && <Message children={outfit.errorMessage} />}
                 </div>
+                {message && <Message>{message}</Message>}
+                {outfit && outfit.errorMessage.length > 0 && <Message>{outfit.errorMessage}</Message>}
             </div>
         </div>
     );

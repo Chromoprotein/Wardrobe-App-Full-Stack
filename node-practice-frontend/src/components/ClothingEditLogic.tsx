@@ -74,7 +74,8 @@ export default function ClothingEditLogic() {
 
       } catch (error) {
         const err = error as CustomError;
-        setMessage("Error: " + err.response.data.message);
+        const errorMessage = err.response?.data?.message || "An unknown error occurred"; 
+        setMessage("Error: " + errorMessage);
       } finally {
         setLoading(false); // Set loading to false after fetching data
       }

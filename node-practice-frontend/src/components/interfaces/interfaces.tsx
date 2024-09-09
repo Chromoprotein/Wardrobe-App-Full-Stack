@@ -38,7 +38,8 @@ export interface UserFormProp {
 export interface CustomError {
   response: {
     data: {
-      message: string;
+      message?: string;
+      error?: string;
     };
   };
 }

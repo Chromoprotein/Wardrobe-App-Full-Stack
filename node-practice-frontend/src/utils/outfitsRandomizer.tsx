@@ -1,7 +1,7 @@
 import { ClothingProp } from "components/interfaces/interfaces";
 import { clothingCategories } from "dummyData/subcategoryArray";
 
-type OutfitsRandomizerReturnType = {
+export type OutfitsRandomizerReturnType = {
   randomOutfit: ClothingProp[];
   errorMessage: string;
 };
@@ -34,8 +34,7 @@ export const outfitsRandomizer = (wardrobe: ClothingProp[]): OutfitsRandomizerRe
 
     // Filter categories
     const filteredCategories = categories.filter((category) => 
-    !(isDressSelected && (category === 'bottom' || category === 'top')) && category !== 'dresses'
-    );
+    !(isDressSelected && (category === 'bottom' || category === 'top')) && category !== 'onePieces');
 
     // Randomly select from remaining categories
     filteredCategories.forEach((category) => {

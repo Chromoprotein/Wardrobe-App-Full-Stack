@@ -58,7 +58,8 @@ export default function Register() {
     } catch (error) {
       console.error(error);
       const err = error as CustomError;
-      setMessage("Error: " + err.response.data.message);
+      const errorMessage = err.response?.data?.message || "An unknown error occurred"; 
+      setMessage("Error: " + errorMessage);
       setIsDisabled(false);
     }
   };

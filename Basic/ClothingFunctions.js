@@ -135,6 +135,35 @@ exports.addItem = async (req, res) => {
 
 }
 
+exports.addOutfit = async (req, res) => {
+  try {
+    const { ids } = req.body;
+
+    // User id comes from authentication middleware
+    const user_id = req.id;
+
+    if (!ids || !user_id) {
+      return res.status(500).json({
+        message: "Something went wrong, clothes or user missing",
+      })
+    } else {
+      const outfit = await Outfit.create({ user_id, ids })
+      if(outfit) {
+        res.status(201).json({
+          message: "Outfit successfully saved",
+          id: outfit._id,
+        });
+      }
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred",
+      error: error.message,
+    })
+  }
+
+}
+
 exports.updateItem = async (req, res) => {
   try {
     const { category, subcategory, brand, color, size, season, cost, formality, worn_count } = req.body

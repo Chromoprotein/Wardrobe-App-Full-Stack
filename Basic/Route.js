@@ -4,7 +4,7 @@ const router = express.Router()
 const { userAuth } = require("../middleware/auth")
 const multer = require('multer');
 
-const { getClothes, getItemById, addItem, deleteItem, updateItem, uploadImage } = require("./ClothingFunctions")
+const { getClothes, getItemById, addItem, deleteItem, updateItem, uploadImage, addOutfit } = require("./ClothingFunctions")
 
 // Set up Multer for file upload
 const storage = multer.memoryStorage();
@@ -14,6 +14,7 @@ const upload = multer({ storage });
 router.route("/getClothes").get(userAuth, getClothes)
 router.route("/getItemById/:id").get(userAuth, getItemById)
 router.route("/addItem").post(userAuth, upload.none(), addItem)
+router.route("/addOutfit").post(userAuth, upload.none(), addOutfit)
 router.route("/updateItem/:id").put(userAuth, upload.none(), updateItem)
 router.route("/deleteItem/:id").delete(userAuth, deleteItem)
 
