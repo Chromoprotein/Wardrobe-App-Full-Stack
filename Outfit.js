@@ -6,10 +6,19 @@ const outfitSchema = new Schema({
         type:String,
         required:true
     },
-    ids: {
+    clothes: [{ type: Schema.Types.ObjectId, ref: 'Clothing' }],
+    formality: {
+        type:String,
+        required:false
+    },
+    season: {
+        type:String,
+        required:false
+    },
+    color: {
         type:Array,
-        required:true
-    }
+        required:false
+    },
 },{collection : 'outfits'})
 
 module.exports = mongoose.model('Outfit', outfitSchema)

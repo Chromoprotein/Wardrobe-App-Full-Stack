@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
 import { usePaginationContext } from "./PaginationContext";
 import { ClothingProp } from "../components/interfaces/interfaces";
+import { OutfitProp } from "../components/interfaces/interfaces";
 
 // Types for our filters and context
 interface FilterState {
@@ -17,6 +18,7 @@ interface FilterContextType {
   resetButtonState: boolean;
   setResetButtonState: (resetButtonState: boolean) => void;
   filteredClothes: (clothes: ClothingProp[]) => ClothingProp[];
+  filteredOutfits: (clothes: OutfitProp[]) => OutfitProp[];
 }
 
 interface FilterContextProviderProps {
@@ -88,9 +90,18 @@ export const FilterContextProvider = ({ children }: FilterContextProviderProps) 
             (filters.season ? piece.season === filters.season : true)
         );
     };
+
+    const filteredOutfits = (outfits: OutfitProp[]) => {
+        return outfits.filter(
+            (outfit) =>
+            (filters.formality ? outfit.formality === filters.formality : true) &&
+            (filters.color.length ? filters.color.every(color => outfit.color &&outfit.color.includes(color)) : true) &&
+            (filters.season ? outfit.season === filters.season : true)
+        );
+    };
     
     return (
-        <FilterContext.Provider value={{ filters, setFilters, handleFiltersChange, resetFilters, resetButtonState, setResetButtonState, filteredClothes }}>
+        <FilterContext.Provider value={{ filters, setFilters, handleFiltersChange, resetFilters, resetButtonState, setResetButtonState, filteredClothes, filteredOutfits }}>
             {children}
         </FilterContext.Provider>
     );

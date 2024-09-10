@@ -25,7 +25,7 @@ export default function useWardrobe(): UseWardrobeReturn {
             const clothingUri = process.env.REACT_APP_CLOTHING_URI;
 
             if (!clothingUri) {
-            throw new Error("API URI is not defined");
+                throw new Error("API URI is not defined");
             }
             const res = await axiosInstance.get(clothingUri);
             setClothes(res.data.clothes);

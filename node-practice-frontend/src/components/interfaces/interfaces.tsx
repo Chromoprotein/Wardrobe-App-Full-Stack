@@ -2,6 +2,7 @@ import { clothingCategories } from "dummyData/subcategoryArray";
 
 export interface ClothingProp { 
   _id: string;
+  user_id?: string;
   category: string;
   subcategory: string;
   color: string;
@@ -15,6 +16,15 @@ export interface ClothingProp {
   filename?: string;
   imageBase64?: string;
   contentType?: string;
+}
+
+export interface OutfitProp {
+  _id: string;
+  user_id?: string;
+  clothes: ClothingProp[];
+  formality?: string;
+  season?: string;
+  color?: string[];
 }
 
 export interface FormProp {

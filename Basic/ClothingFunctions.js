@@ -137,17 +137,23 @@ exports.addItem = async (req, res) => {
 
 exports.addOutfit = async (req, res) => {
   try {
-    const { ids } = req.body;
+    const { outfitData } = req.body;
+    const { clothes, formality, season, color } = outfitData;
 
+    console.log("test" + color)
+    // Ensure color is an array
+    const colorArray = Array.isArray(color) ? color : color.split(',');
+
+    console.log("testarray " + colorArray)
     // User id comes from authentication middleware
     const user_id = req.id;
 
-    if (!ids || !user_id) {
+    if (!clothes || !user_id) {
       return res.status(500).json({
         message: "Something went wrong, clothes or user missing",
       })
     } else {
-      const outfit = await Outfit.create({ user_id, ids })
+      const outfit = await Outfit.create({ user_id, clothes, formality, season, color: colorArray })
       if(outfit) {
         res.status(201).json({
           message: "Outfit successfully saved",
@@ -155,6 +161,26 @@ exports.addOutfit = async (req, res) => {
         });
       }
     }
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred",
+      error: error.message,
+    })
+  }
+
+}
+
+exports.fetchOutfits = async (req, res) => {
+
+  try {
+    const user_id = req.id;
+
+    const outfits = await Outfit.find({ user_id: user_id })
+      .populate('clothes')  // This will fetch the associated clothing items
+      .exec();
+      if(outfits) {
+        res.status(200).json({ outfits })
+      }
   } catch (error) {
     res.status(500).json({
       message: "An error occurred",

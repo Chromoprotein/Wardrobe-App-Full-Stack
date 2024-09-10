@@ -15,12 +15,12 @@ import { useAuth, AuthProvider } from './authContext';
 import { ClothingContextProvider } from './contexts/ClothingContext';
 import { FilterContextProvider } from './contexts/FilterContext';
 import { PaginationContextProvider } from './contexts/PaginationContext';
-import { OutfitContextProvider } from './contexts/OutfitsContext';
 import ClothingFormLogic from './components/ClothingFormLogic';
 import ClothingEditLogic from './components/ClothingEditLogic';
 import UploadImage from './components/uploadImage';
 import Landing from './components/Landing';
 import GenerateOutfits from './components/GenerateOutfits';
+import SavedOutfits from './components/SavedOutfits';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -33,8 +33,8 @@ const router = createBrowserRouter(
       <Route path="login" element={<Login />} />
       <Route path="logout" element={<Logout />} />
       <Route path="landing" element={<Landing />} />
-      {/*<Route path="outfits" element={<SavedOutfits/>} />*/}
       <Route path="generate" element={<GenerateOutfits/>} />
+      <Route path="outfits" element={<SavedOutfits />} />
       <Route path="*" element={<h1>Page not found</h1>} />
     </Route>
   )
@@ -61,9 +61,7 @@ root.render(
       <ClothingContextProvider>
         <PaginationContextProvider>
           <FilterContextProvider>
-            <OutfitContextProvider>
-              <RouterProvider router={router} />
-            </OutfitContextProvider>
+            <RouterProvider router={router} />
           </FilterContextProvider>
         </PaginationContextProvider>
         </ClothingContextProvider>

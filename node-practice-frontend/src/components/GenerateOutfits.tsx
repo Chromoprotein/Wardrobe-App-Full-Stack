@@ -6,7 +6,6 @@ import { outfitsRandomizer } from "../utils/outfitsRandomizer";
 import BackButton from "./BackButton";
 import Button from "./Button";
 import Message from "./Message";
-import { useOutfitContext } from "../contexts/OutfitsContext";
 import { useFilterContext } from "../contexts/FilterContext";
 import Spinner from "./Spinner";
 import useWardrobe from "utils/useWardrobe";
@@ -17,8 +16,6 @@ import { CustomError } from "./interfaces/interfaces";
 
 export default function GenerateOutfits() {
 
-    // State for randomly generated outfits saved by the user
-    const { savedOutfits, setSavedOutfits } = useOutfitContext();
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
     const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
@@ -30,7 +27,7 @@ export default function GenerateOutfits() {
     }, [getClothes]);
 
     // Filter function for filtering clothes
-    const { filteredClothes } = useFilterContext();
+    const { filters, filteredClothes } = useFilterContext();
     // Apply the filter on clothes
     const clothesForOutfitGeneration = filteredClothes(clothes ?? []); // empty array fallback
 
@@ -73,8 +70,15 @@ export default function GenerateOutfits() {
 
     const saveOutfit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         if (outfit && outfit.randomOutfit.length > 0) {
-            const ids = outfit.randomOutfit.map(piece => piece._id);
+            const clothes = outfit.randomOutfit.map(piece => piece._id);
             setIsDisabled(true);
+
+            const outfitData = {
+                season: filters.season,
+                formality: filters.formality,
+                color: filters.color,
+                clothes: clothes
+            }
 
             try {
                 const addOutfitUri = process.env.REACT_APP_ADD_OUTFIT_URI;
@@ -83,19 +87,13 @@ export default function GenerateOutfits() {
                     throw new Error("URI is not defined");
                 }
 
-                const response = await axios.post(addOutfitUri, { ids }, {
+                const response = await axios.post(addOutfitUri, { outfitData }, {
                     withCredentials: true,
                 });
                 console.log(response.data);
                 setIsSuccess(true);
                 setMessage(response.data.message);
 
-                // Save to state
-                if(savedOutfits) {
-                    setSavedOutfits([...savedOutfits, ids]);
-                } else {
-                    setSavedOutfits([ids]);
-                }
             } catch (error) {
                 const err = error as CustomError;
                 const errorMessage = err.response?.data?.message || "An unknown error occurred"; 
@@ -116,11 +114,11 @@ export default function GenerateOutfits() {
                 <Logo/>
                 <ClothingFilters />
 
-                <Button children="Generate Outfit" eventHandler={handleGenerateOutfit} />
+                <Button children="Generate Another Outfit" eventHandler={handleGenerateOutfit} />
 
                 {/*If an outfit has been generated, show the save button*/}
                 {outfit && 
-                    <Button children="Save Outfit" isSuccess={isSuccess} eventHandler={saveOutfit} isDisabled={isDisabled} />
+                    <Button isSuccess={isSuccess} eventHandler={saveOutfit} isDisabled={isDisabled}>Save Outfit</Button>
                 }
 
                 <BackButton />
