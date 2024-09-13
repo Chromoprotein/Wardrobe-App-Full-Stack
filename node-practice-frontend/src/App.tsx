@@ -3,14 +3,10 @@ import { usePaginationContext } from "./contexts/PaginationContext";
 import { useFilterContext } from "./contexts/FilterContext";
 import { ClothingProp } from 'components/interfaces/interfaces';
 import ClothingCard from 'components/ClothingCard';
-import { Link } from 'react-router-dom';
 import MainMenu from 'components/MainMenu';
-import ClothingFilters from 'components/ClothingFilters';
 import PaginationControls from 'components/PaginationControls';
 import Message from 'components/Message';
-import Logo from 'components/Logo';
 import './styles/App.css';
-import Button from 'components/Button';
 import Spinner from 'components/Spinner';
 import Landing from 'components/Landing';
 import { useAuth } from 'authContext';
@@ -53,16 +49,7 @@ function App() {
   return (
     <div className="mainPageWrapper">
 
-      <div className="navbarWrapper">
-        <Logo/>
-        {/*Navigation buttons for adding clothes and generating outfits*/}
-        <MainMenu/>
-        {/*Menu where you can choose filters for clothes*/}
-        <ClothingFilters />
-        <Link to={`/logout`}>
-            <Button children="Log out" />
-        </Link>
-      </div>
+      <MainMenu />
 
       <div className="mainContentWrapper">
         {paginatedItems.length > 0 ? (

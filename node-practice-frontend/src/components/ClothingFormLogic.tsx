@@ -15,14 +15,15 @@ export default function ClothingFormLogic() {
     const initialState = {
         category: "tops", // Default category
         subcategory: "",
-        brand: "",
         color: "",
-        size: "",
         season: "",
         cost: "",
         formality: "",
         worn_count: "",
+        name: "",
+        brand: "",
     }
+    const mandatoryFields: Array<keyof FormProp> = ["category", "subcategory", "color", "season", "cost", "formality", "worn_count"];
     const [formState, setFormState] = useState<FormProp>(initialState as FormProp);
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
@@ -36,7 +37,8 @@ export default function ClothingFormLogic() {
 
     const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
-        setFormState((prevState) => ({ ...formState, [name]: value }));
+        const newState: FormProp = { ...formState, [name]: value };
+        setFormState((prevState) => newState);
 
         //Update visible subcategories when main category changes
         if(name === "category") {
@@ -45,7 +47,9 @@ export default function ClothingFormLogic() {
         }
 
         //Check if submit button should be enabled
-        const isDisabledChange = !Object.values(formState).every(value => value);
+        const isDisabledChange = (): boolean => {
+            return !mandatoryFields.every((field) => newState[field]);
+        };
         setIsDisabled(isDisabledChange);
     }
 

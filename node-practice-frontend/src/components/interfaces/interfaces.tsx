@@ -10,8 +10,9 @@ export interface ClothingProp {
   season: string;
   cost: number;
   worn_count: number;
-  size: string;
-  brand: string;
+
+  name?: string;
+  brand?: string;
 
   filename?: string;
   imageBase64?: string;
@@ -25,18 +26,21 @@ export interface OutfitProp {
   formality?: string;
   season?: string;
   color?: string[];
+  
+  name?: string;
 }
 
 export interface FormProp {
   category: keyof typeof clothingCategories;
   subcategory: string;
-  brand: string;
   color: string;
-  size: string;
   season: string;
   cost: string;
   formality: string;
   worn_count: string;
+
+  name: string;
+  brand: string;
 }
 
 export interface UserFormProp {

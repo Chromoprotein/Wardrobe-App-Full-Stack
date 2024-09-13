@@ -30,14 +30,6 @@ const clothingSchema = new Schema({
         type:Number,
         required:true
     },
-    size: {
-        type:String,
-        required:true
-    },
-    brand: {
-        type:String,
-        required:true
-    },
     worn_count: {
         type:Number,
         required:true
@@ -54,6 +46,14 @@ const clothingSchema = new Schema({
         type:String,
         required:false
     },
-},{collection : 'clothes'})
+    name: {
+        type:String,
+        required:false
+    },
+    brand: {
+        type:String,
+        required:false
+    }
+},{collection : 'clothes', timestamps: true})
 
 module.exports = mongoose.model('Clothing', clothingSchema)

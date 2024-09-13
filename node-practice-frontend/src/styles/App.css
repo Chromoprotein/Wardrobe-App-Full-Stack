@@ -9,7 +9,7 @@
 }
 *, ::before, ::after {
   box-sizing: border-box;
-  font-size: 16px;
+  font-size:16px;
 }
 html {
   color: var(--darkwhite);
@@ -62,6 +62,15 @@ p {
 /*on the saved outfits page*/
 .outfitContainer {
   background-color: var(--extragrey);
+  padding:10px;
+  margin:10px;
+}
+.outfitNav {
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
 }
 
 /*MODAL*/
@@ -273,7 +282,6 @@ input[type="checkbox"]:checked::before, input[type="radio"]:checked::before {
   display:flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: center;
   justify-content:center;
   gap:30px;
   width: 100%;
@@ -314,11 +322,14 @@ input[type="checkbox"]:checked::before, input[type="radio"]:checked::before {
   display:block;
   text-align: center;
   text-overflow: ellipsis;
+  color: var(--colorpop);
+  padding: 4px;
+  margin: 4px;
 }
 .customTitle {
   display:block;
   text-align:center;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: normal;
   color: var(--colorpop);
 }

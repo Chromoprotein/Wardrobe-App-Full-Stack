@@ -4,7 +4,6 @@ import colors from "../dummyData/ColorsArray";
 import { formality } from "../dummyData/formalityArray";
 import { SelectMenu, InputField, ColorPicker } from "./FormComponents";
 import { seasons } from "../dummyData/seasonsArray";
-import { sizes } from "../dummyData/sizesArray";
 import Button from "./Button";
 import { FormProp } from "./interfaces/interfaces";
 import Message from "./Message";
@@ -26,6 +25,8 @@ export default function ClothingForm({ handleClothingSubmit, newClothing, handle
     <div className="formWrapper">
       <form onSubmit={handleClothingSubmit}>
 
+        <InputField label="Name (optional)" name="name" menuState={newClothing.name} eventHandler={handleClothesFormChange} placeholder="Work shirt"/>
+
         <SelectMenu name="category" menuState={newClothing.category} inputArray={mainCategories} eventHandler={handleClothesFormChange}/>
 
         <SelectMenu name="subcategory" menuState={newClothing.subcategory} inputArray={subCategories} eventHandler={handleClothesFormChange}/>
@@ -34,15 +35,13 @@ export default function ClothingForm({ handleClothingSubmit, newClothing, handle
 
         <SelectMenu name="season" menuState={newClothing.season} inputArray={seasons} eventHandler={handleClothesFormChange}/>
 
-        <SelectMenu name="size" menuState={newClothing.size} inputArray={sizes} eventHandler={handleClothesFormChange}/>
-
         <ColorPicker type="radio" menuState={newClothing.color} colorsArray={colors} eventHandler={handleClothesFormChange} />
 
-        <InputField name="brand" menuState={newClothing.brand} eventHandler={handleClothesFormChange} type="text" placeholder="Brand A"/>
+        <InputField label="Cost" name="cost" menuState={newClothing.cost} eventHandler={handleClothesFormChange} type="number" placeholder="0"/>
 
-        <InputField name="cost" menuState={newClothing.cost} eventHandler={handleClothesFormChange} type="number" placeholder="10"/>
+        <InputField label="Worn count" name="worn_count" menuState={newClothing.worn_count} eventHandler={handleClothesFormChange} type="number" placeholder="0"/>
 
-        <InputField name="worn_count" menuState={newClothing.worn_count} eventHandler={handleClothesFormChange} type="number" placeholder="10"/>
+        <InputField label="Brand (optional)" name="brand" menuState={newClothing.brand} eventHandler={handleClothesFormChange}/>
 
         <Button isDisabled={isDisabled} actionType="submit" isSuccess={isSuccess}>Save & Next</Button>
 

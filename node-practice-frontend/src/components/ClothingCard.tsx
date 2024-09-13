@@ -22,7 +22,7 @@ interface ClothingCardProps {
 
 export default function ClothingCard({ clothingProp }: ClothingCardProps) {
 
-  const { cost, worn_count, category, subcategory, _id, color, season, formality, brand, size, filename, imageBase64, contentType } = clothingProp; 
+  const { cost, worn_count, category, subcategory, _id, color, season, formality, filename, imageBase64, contentType, name, brand } = clothingProp; 
 
   const costPerWear = (cost / worn_count).toFixed(2);
 
@@ -41,9 +41,9 @@ export default function ClothingCard({ clothingProp }: ClothingCardProps) {
       <Link to={`/edit/${_id}`}>
         <img src={clothingPicture} alt={filename || category} className="clothingImage placeholderImage" />
         <div className="clothingTextWrapper">
-          {subcategory} {spacer} {brand} {spacer}
-          {color} {spacer} {season} {spacer} {size} {spacer}
-          {formality} {spacer} wears: {worn_count} {spacer}
+          {name && name} {name && spacer} {subcategory} {spacer}
+          {color} {spacer} {season} {spacer}
+          {formality} {spacer} {brand && brand} {brand && spacer} wears: {worn_count} {spacer}
           CPW:{" "}
           {worn_count !== 0 ? (
             <span>{costPerWear} </span>

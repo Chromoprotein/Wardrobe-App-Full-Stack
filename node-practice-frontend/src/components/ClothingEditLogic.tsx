@@ -19,14 +19,15 @@ export default function ClothingEditLogic() {
   const initialState = {
       category: "",
       subcategory: "",
-      brand: "",
       color: "",
-      size: "",
       season: "",
       cost: "",
       formality: "",
       worn_count: "",
+      name: "",
+      brand: "",
   }
+  const mandatoryFields: Array<keyof FormProp> = ["category", "subcategory", "color", "season", "cost", "formality", "worn_count"];
 
   const navigate = useNavigate();
   const [formState, setFormState] = useState<FormProp>(initialState as FormProp);
@@ -62,13 +63,13 @@ export default function ClothingEditLogic() {
         setFormState({
             category: newData.category,
             subcategory: newData.subcategory,
-            brand: newData.brand,
             color: newData.color,
-            size: newData.size,
             season: newData.season,
             cost: newData.cost,
             formality: newData.formality,
             worn_count: newData.worn_count,
+            name: newData.name,
+            brand: newData.brand,
         })
         setSubCategories(clothingCategories[newData.category as keyof typeof clothingCategories] || []);
 
@@ -88,8 +89,8 @@ export default function ClothingEditLogic() {
   
     const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name, value } = event.target;
-
-      setFormState((prevState) => ({ ...formState, [name]: value }));
+      const newState: FormProp = { ...formState, [name]: value };
+      setFormState((prevState) => newState);
 
       //Update visible subcategories when main category changes
       if(name === "category") {
@@ -101,7 +102,10 @@ export default function ClothingEditLogic() {
         setHasUpdates(true);
       }
 
-      const isDisabledChange = !Object.values(formState).every(value => value);
+      //Check if submit button should be enabled
+      const isDisabledChange = (): boolean => {
+        return !mandatoryFields.every((field) => newState[field]);
+      };
       setIsDisabled(isDisabledChange);
     }
 

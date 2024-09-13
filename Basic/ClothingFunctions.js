@@ -45,25 +45,6 @@ exports.uploadImage = async (req, res) => {
   
 }
 
-//exports.fetchImageById = async (req, res) => {
-//  const userId = req.id;
-//  const clothingId = req.params.id;
-
-//  try {
-//    const image = await Image.findOne({ userId: userId, clothingId: clothingId });
-//    if(!image) {
-//      res.status(404).json({ message: "No image found" });
-//    }
-//    console.log("Image found:", image);
-//    res.status(200).json(image);
-    //res.contentType(image.contentType);
-    //res.send(Buffer.from(image.imageBase64, 'base64'));
-//  } catch (err) {
-//      console.error("Error finding image:", error);
-//      res.status(500).json({ message: "Internal server error" });
-//  }
-//}
-
 // Lists all the user's clothes
 exports.getClothes = async (req, res) => {
     try {
@@ -71,7 +52,7 @@ exports.getClothes = async (req, res) => {
         const userId = req.id;
 
         // Find the user by ID and populate the books field
-        const clothes = await Clothing.find({ user_id: userId });
+        const clothes = await Clothing.find({ user_id: userId }).sort({ createdAt: -1 });
 
         if (!clothes) {
             return res.status(404).json({ message: "No clothes found" });
@@ -108,17 +89,17 @@ exports.getItemById = async (req, res) => {
 
 exports.addItem = async (req, res) => {
   try {
-    const { category, subcategory, color, formality, season, cost, size, brand, worn_count } = req.body;
+    const { category, subcategory, color, formality, season, cost, worn_count, name, brand } = req.body;
 
     // User id comes from authentication middleware
     const user_id = req.id;
 
-    if (!category || !subcategory || !color || !formality || !season || !cost || !size || !brand || !worn_count || !user_id) {
+    if (!category || !subcategory || !color || !formality || !season || !cost || !worn_count || !user_id) {
       return res.status(500).json({
         message: "Form information missing or user not found",
       })
     } else {
-      const clothing = await Clothing.create({ user_id, category, subcategory, color, formality, season, cost, size, brand, worn_count })
+      const clothing = await Clothing.create({ user_id, category, subcategory, color, formality, season, cost, worn_count, name, brand })
       if(clothing) {
         res.status(201).json({
           message: "Clothing successfully created",
@@ -176,6 +157,7 @@ exports.fetchOutfits = async (req, res) => {
     const user_id = req.id;
 
     const outfits = await Outfit.find({ user_id: user_id })
+      .sort({ createdAt: -1 })
       .populate('clothes')  // This will fetch the associated clothing items
       .exec();
       if(outfits) {
@@ -192,12 +174,12 @@ exports.fetchOutfits = async (req, res) => {
 
 exports.updateItem = async (req, res) => {
   try {
-    const { category, subcategory, brand, color, size, season, cost, formality, worn_count } = req.body
+    const { category, subcategory, color, season, cost, formality, worn_count, brand, name } = req.body
     const clothingId = req.params.id;
     const userId = req.id; // User id from authentication middleware
 
     // Check that all the data is present
-    if (!category || !subcategory || !brand || !color || !size || !season || !cost || !formality || !worn_count || !userId) {
+    if (!category || !subcategory || !color || !season || !cost || !formality || !worn_count || !userId) {
       return res.status(400).json({
         message: "Required information is missing",
       });
@@ -212,13 +194,13 @@ exports.updateItem = async (req, res) => {
     // Update the book details
     validateItem.category = category;
     validateItem.subcategory = subcategory;
-    validateItem.brand = brand;
     validateItem.color = color;
-    validateItem.size = size;
     validateItem.season = season;
     validateItem.cost = cost;
     validateItem.formality = formality;
     validateItem.worn_count = worn_count;
+    validateItem.name = name;
+    validateItem.brand = brand;
     
     await validateItem.save();
 
@@ -244,6 +226,24 @@ exports.deleteItem = async (req, res) => {
         const clothing = await Clothing.findOneAndDelete({ _id: clothingId, user_id: userId });
 
         if (!clothing) {
+            return res.status(404).json({ message: "Item not found or not authorized to delete" });
+        }
+
+        res.status(200).json({ message: "Item deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting item:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+exports.deleteOutfit = async (req, res) => {
+    try {
+        const userId = req.id; // User id from auth middleware
+        const outfitId = req.params.id; // Clothing id from URL parameter
+
+        const outfit = await Outfit.findOneAndDelete({ _id: outfitId, user_id: userId });
+
+        if (!outfit) {
             return res.status(404).json({ message: "Item not found or not authorized to delete" });
         }
 

@@ -9,11 +9,12 @@ interface SelectMenuType {
 }
 
 interface InputFieldType {
+    label?: string;
     name: string;
     menuState: string | number;
     eventHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    type: string;
-    placeholder: string;
+    type?: string;
+    placeholder?: string;
 }
 
 interface ColorPickerType {
@@ -29,7 +30,7 @@ export function SelectMenu({ name, menuState, inputArray, eventHandler }: Select
         <>
             {inputArray &&
                 <select className={menuState ? 'bigButton selectedStyle' : 'bigButton idleStyle'} value={menuState} name={name} onChange={eventHandler}>
-                    <option value="" disabled selected>
+                    <option value="" disabled>
                         {capitalize(name)}
                     </option>
                     {inputArray.map((formality) => (
@@ -44,10 +45,10 @@ export function SelectMenu({ name, menuState, inputArray, eventHandler }: Select
 
 };
 
-export function InputField({ name, menuState, eventHandler, type, placeholder }: InputFieldType) {
+export function InputField({ label, name, menuState, eventHandler, type = "text", placeholder }: InputFieldType) {
     return (
         <div className={menuState ? "bigButton selectedStyle" : "bigButton idleStyle"}>
-            <label>{capitalize(name)} </label>
+            <label className="customLabel">{label}</label>
             <input className="textInputStyle" type={type} name={name} value={menuState} onChange={eventHandler} placeholder={placeholder} />
         </div>
     );

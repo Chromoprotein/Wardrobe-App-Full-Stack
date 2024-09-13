@@ -13,6 +13,7 @@ import { OutfitsRandomizerReturnType } from "../utils/outfitsRandomizer";
 import Logo from "./Logo";
 import axios from "axios";
 import { CustomError } from "./interfaces/interfaces";
+import MainMenu from "./MainMenu";
 
 export default function GenerateOutfits() {
 
@@ -77,7 +78,7 @@ export default function GenerateOutfits() {
                 season: filters.season,
                 formality: filters.formality,
                 color: filters.color,
-                clothes: clothes
+                clothes: clothes,
             }
 
             try {
@@ -109,27 +110,28 @@ export default function GenerateOutfits() {
 
     return (
         <div className="mainPageWrapper">
-            <div className="navbarWrapper">
 
-                <Logo/>
-                <ClothingFilters />
-
-                <Button children="Generate Another Outfit" eventHandler={handleGenerateOutfit} />
-
-                {/*If an outfit has been generated, show the save button*/}
-                {outfit && 
-                    <Button isSuccess={isSuccess} eventHandler={saveOutfit} isDisabled={isDisabled}>Save Outfit</Button>
-                }
-
-                <BackButton />
-            </div>
+            <MainMenu />
 
             <div className="mainContentWrapper">
-                <div className="clothingCardContainer">
-                    {mapOutfit && mapOutfit}
-                </div>
+
                 {message && <Message>{message}</Message>}
                 {outfit && outfit.errorMessage.length > 0 && <Message>{outfit.errorMessage}</Message>}
+            
+                <div className="outfitNav">
+                    <Button children="Re-generate" eventHandler={handleGenerateOutfit} />
+
+                    {/*If an outfit has been generated, show the save button*/}
+                    {outfit && 
+                        <Button isSuccess={isSuccess} eventHandler={saveOutfit} isDisabled={isDisabled}>Save Outfit</Button>
+                    }
+                </div>
+
+                <div className="outfitContainer">
+                    <div className="clothingCardContainer">
+                        {mapOutfit && mapOutfit}
+                    </div>
+                </div>
             </div>
         </div>
     );

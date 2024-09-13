@@ -18,7 +18,7 @@ const outfitSchema = new Schema({
     color: {
         type:Array,
         required:false
-    },
-},{collection : 'outfits'})
+    }
+},{collection : 'outfits', timestamps: true})
 
 module.exports = mongoose.model('Outfit', outfitSchema)
