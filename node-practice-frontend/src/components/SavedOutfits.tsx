@@ -21,6 +21,7 @@ export default function SavedOutfits() {
     const [message, setMessage] = useState<string>("");
 
     const [isDisabled, setIsDisabled] = useState<string>(""); // id of disabled button
+    const [isUpdated, setIsUpdated] = useState<boolean>(false);
 
     const [savedOutfits, setSavedOutfits] = useState<OutfitProp[]>();
 
@@ -51,7 +52,7 @@ export default function SavedOutfits() {
             }
         }
         getOutfits();
-    }, [setSavedOutfits]);
+    }, [setSavedOutfits, isUpdated]);
 
     if(loading) {
         return <Spinner />
@@ -59,13 +60,30 @@ export default function SavedOutfits() {
 
     if (!savedOutfits) return <Message>No outfits saved</Message>
 
-    type ButtonAction = (id: string) => void;
+    const handleWear: (outfit: OutfitProp) => void = async (outfit) => {
+        try {
+            const wearCountUri = `${process.env.REACT_APP_WEAR_COUNT_URI}`;
 
-    const handleWear: ButtonAction = (id) => {
-        
+            if (!wearCountUri) {
+                throw new Error("URI is not defined");
+            }
+
+            const clothingIds = outfit.clothes.map(piece => piece._id);
+            const response = await axios.put(wearCountUri, clothingIds, { withCredentials: true });
+
+            console.log(response.data);
+            setIsUpdated(!isUpdated);
+            setOutfitMessage({id: outfit._id, content: response.data.message});
+        } catch (error) {
+            setIsDisabled("");
+            const err = error as CustomError;
+            setOutfitMessage({id: outfit._id, content: "Error: " + err.response.data.message});
+        }
+
+       
     }
 
-    const handleDelete: ButtonAction = async (id) => {
+    const handleDelete: (id: string) => void = async (id) => {
         
         try {
             setIsDisabled(id);
@@ -87,6 +105,11 @@ export default function SavedOutfits() {
         
     }
 
+    const clearMessages = () => {
+        setMessage("");
+        setOutfitMessage({id: "", content: ""});
+    }
+
     const mappedOutfits: JSX.Element[] = filteredOutfits(savedOutfits)
     .map((outfit: OutfitProp) => (
             <div key={outfit._id} className="outfitContainer">
@@ -106,7 +129,7 @@ export default function SavedOutfits() {
                 </div>
                 <div className="outfitNav">
                     <Button 
-                        eventHandler={() => handleWear(outfit._id)}
+                        eventHandler={() => handleWear(outfit)}
                         isDisabled={outfit._id === isDisabled}>
                             +1 Wear
                         </Button>
@@ -116,7 +139,7 @@ export default function SavedOutfits() {
                             Delete
                     </Button>
                 </div>
-                {(outfitMessage.content.length > 0 && outfitMessage.id === outfit._id) && <Message>{outfitMessage.content}</Message>}
+                {(outfitMessage.content.length > 0 && outfitMessage.id === outfit._id) && <Message onClose={clearMessages}>{outfitMessage.content}</Message>}
             </div>
         )
     );

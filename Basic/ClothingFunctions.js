@@ -253,3 +253,40 @@ exports.deleteOutfit = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+exports.updateWearCount = async (req, res) => {
+  try {
+    const clothingIds = req.body;
+    console.log("test " + clothingIds)
+    const clothingIdsArr = Array.isArray(clothingIds) ? clothingIds : clothingIds.split(',');
+    const userId = req.id; // User id from authentication middleware
+
+    
+    // inc increments fields
+    const update = { $inc: { worn_count: 1 } };
+
+    // Check that all the data is present
+    if (!clothingIdsArr || !userId) {
+      return res.status(400).json({
+        message: "Clothes or user were not found",
+      });
+    }
+
+    const result = await Clothing.updateMany(
+      { _id: { $in: clothingIdsArr }, user_id: userId }, // Find all items with these IDs
+      update // Apply this update to all matched items
+    );
+
+    if(result) {
+      res.status(200).json({
+        message: "Wear counts successfully updated",
+      });
+    }
+
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occurred",
+      error: error.message,
+    });
+  }
+}

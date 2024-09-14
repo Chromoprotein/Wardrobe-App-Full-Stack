@@ -5,6 +5,6 @@ User experience things:
 - route protection on client, with axios instance redirecting?
 
 Features:
-- Increment clothing wear count
+- sort clothes by most/least worn, newest/oldest
 - Custom error page
 - more mobile friendly
