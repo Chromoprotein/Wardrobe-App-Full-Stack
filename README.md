@@ -30,15 +30,15 @@ node-practice-frontend: frontend folder.
 
 - node-practice-frontend/src/components: React components.
 
-* ClothingFormLogic.tsx and ClothingEditLogic.tsx: logic for uploading and updating/deleting clothes, respectively.
+  * ClothingFormLogic.tsx and ClothingEditLogic.tsx: logic for uploading and updating/deleting clothes, respectively.
 
-* ClothingForm.tsx: clothing form UI.
+  * ClothingForm.tsx: clothing form UI.
 
-* Login.tsx and Regiter.tsx: login and registration logic.
+  * Login.tsx and Regiter.tsx: login and registration logic.
 
-* UserForm.tsx: registration/login form UI.
+  * UserForm.tsx: registration/login form UI.
 
-* GenerateOutfits.tsx: UI for the outfit generating page.
+  * GenerateOutfits.tsx: UI for the outfit generating page.
 
 - node-practice-frontend/src/components/interfaces: TypesScript interfaces.
 
@@ -50,7 +50,7 @@ node-practice-frontend: frontend folder.
 
 - node-practice-frontend/src/utils: hooks and helper functions.
 
-* outfitsRandomizer.tsx: outfit randomization logic.
+  * outfitsRandomizer.tsx: outfit randomization logic.
 
 ## My to-do list:
 
