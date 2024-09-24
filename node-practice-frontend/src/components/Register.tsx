@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useCookies } from "react-cookie";
 import useReturn from '../utils/useReturn';
-import { useAuth } from '../authContext';
+import { useAuth } from '../contexts/authContext';
 import { CustomError } from './interfaces/interfaces';
 import { UserFormProp } from './interfaces/interfaces';
 import UserForm from './UserForm';

@@ -9,9 +9,9 @@ import {
 } from "react-router-dom";
 import Register from './components/Register';
 import Login from './components/Login';
-import App from './App';
+import App from './components/App';
 import Logout from './components/Logout';
-import { useAuth, AuthProvider } from './authContext';
+import { useAuth, AuthProvider } from './contexts/authContext';
 import { ClothingContextProvider } from './contexts/ClothingContext';
 import { FilterContextProvider } from './contexts/FilterContext';
 import { PaginationContextProvider } from './contexts/PaginationContext';

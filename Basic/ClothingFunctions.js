@@ -1,9 +1,9 @@
 const bcrypt = require("bcryptjs")
 // The user schema
-const User = require('../User');
-const Clothing = require('../Clothing');
-const Outfit = require('../Outfit');
-const Image = require('../Image')
+const User = require('../Schemas/User');
+const Clothing = require('../Schemas/Clothing');
+const Outfit = require('../Schemas/Outfit');
+const Image = require('../Schemas/Image')
 
 // User authentication with JSON Web Token
 const jwt = require('jsonwebtoken')

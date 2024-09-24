@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
-import { usePaginationContext } from "./contexts/PaginationContext";
-import { useFilterContext } from "./contexts/FilterContext";
-import { ClothingProp } from 'components/interfaces/interfaces';
-import ClothingCard from 'components/ClothingCard';
-import MainMenu from 'components/MainMenu';
-import PaginationControls from 'components/PaginationControls';
-import Message from 'components/Message';
-import './styles/App.css';
-import Spinner from 'components/Spinner';
-import Landing from 'components/Landing';
-import { useAuth } from 'authContext';
-import useWardrobe from 'utils/useWardrobe';
+import { usePaginationContext } from '../contexts/PaginationContext';
+import { useFilterContext } from "../contexts/FilterContext";
+import { ClothingProp } from './interfaces/interfaces';
+import ClothingCard from './ClothingCard';
+import MainMenu from './MainMenu';
+import PaginationControls from './PaginationControls';
+import Message from './Message';
+import '../styles/App.css';
+import Spinner from './Spinner';
+import Landing from './Landing';
+import { useAuth } from '../contexts/authContext';
+import useWardrobe from '../utils/useWardrobe';
 
 function App() {
 

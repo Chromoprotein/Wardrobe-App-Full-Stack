@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs")
 // The user schema
-const User = require("../User")
+const User = require("../Schemas/User")
 
 // User authentication with JSON Web Token
 const jwt = require('jsonwebtoken')
