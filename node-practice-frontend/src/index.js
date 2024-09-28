@@ -22,20 +22,56 @@ import Landing from './components/Landing';
 import GenerateOutfits from './components/GenerateOutfits';
 import SavedOutfits from './components/SavedOutfits';
 import Error from './components/Error';
+import Spinner from './components/Spinner';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">        
       <Route index element={<App />} />
       <Route path="register" element={<Register />} />
-      <Route path="edit/:id" element={<ClothingEditLogic/>} />
-      <Route path="uploadImage/:id" element={<UploadImage/>} />
-      <Route path="submit" element={<ClothingFormLogic/>} />
+      <Route
+        path="edit/:id"
+        element={
+          <RequireAuth redirectTo="/login">
+            <ClothingEditLogic />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="uploadImage/:id"
+        element={
+          <RequireAuth redirectTo="/login">
+            <UploadImage/>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="submit"
+        element={
+          <RequireAuth redirectTo="/login">
+            <ClothingFormLogic />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="generate"
+        element={
+          <RequireAuth redirectTo="/login">
+            <GenerateOutfits />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="outfits"
+        element={
+          <RequireAuth redirectTo="/login">
+            <SavedOutfits />
+          </RequireAuth>
+        }
+      />
       <Route path="login" element={<Login />} />
       <Route path="logout" element={<Logout />} />
       <Route path="landing" element={<Landing />} />
-      <Route path="generate" element={<GenerateOutfits/>} />
-      <Route path="outfits" element={<SavedOutfits />} />
       <Route path="*" element={<Error/>} />
     </Route>
   )
@@ -48,8 +84,7 @@ function RequireAuth({ children, redirectTo }) {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
-    console.log("loading in the route check")
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   return isAuthenticated ? children : <Navigate to={redirectTo} />;

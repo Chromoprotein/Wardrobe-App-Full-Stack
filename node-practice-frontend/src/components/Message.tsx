@@ -1,4 +1,6 @@
 import React from "react";
+import { IoClose } from "react-icons/io5";
+
 interface MessageProps {
     children: string;
     animate?: boolean;
@@ -15,7 +17,10 @@ export default function Message({ children, animate, onClose }: MessageProps) {
     <div className={`${animateClass} ${modalStyle}`}>
         <div className="messageContent">
             {children}
-            {onClose && <button className="xButton" onClick={onClose}>X</button>}
+            {onClose && 
+            <button className="xButton" onClick={onClose}>
+                <IoClose />
+            </button>}
         </div>
     </div>
     );

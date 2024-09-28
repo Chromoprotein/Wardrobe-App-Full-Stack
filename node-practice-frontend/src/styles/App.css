@@ -81,7 +81,7 @@ p {
 
 /*OUTFITS PAGE*/
 /*wraps buttons on the generate outfits page*/
-.outfitButtonWrapper {
+.maxWidth500 {
   max-width:500px;
 }
 /*on the saved outfits page*/

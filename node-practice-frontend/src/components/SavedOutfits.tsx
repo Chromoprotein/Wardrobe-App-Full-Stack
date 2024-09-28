@@ -127,7 +127,7 @@ export default function SavedOutfits() {
                     <span> &#8226; </span> 
                     {outfit.color && outfit.color.length > 0 ? outfit.color.join(" ") : "random colors"}
                 </div>
-                <div className="outfitNav">
+                <div className="outfitNav maxWidth500">
                     <Button 
                         eventHandler={() => handleWear(outfit)}
                         isDisabled={outfit._id === isDisabled}>
@@ -135,7 +135,7 @@ export default function SavedOutfits() {
                         </Button>
                     <Button 
                         eventHandler={() => handleDelete(outfit._id)} 
-                        isDisabled={outfit._id === isDisabled}>
+                        isDisabled={outfit._id === isDisabled} actionType="delete">
                             Delete
                     </Button>
                 </div>

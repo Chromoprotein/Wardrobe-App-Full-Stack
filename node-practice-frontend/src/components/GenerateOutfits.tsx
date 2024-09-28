@@ -118,7 +118,7 @@ export default function GenerateOutfits() {
                 {message && <Message>{message}</Message>}
                 {outfit && outfit.errorMessage.length > 0 && <Message>{outfit.errorMessage}</Message>}
             
-                <div className="outfitNav">
+                <div className="outfitNav maxWidth500">
                     <Button children="Re-generate" eventHandler={handleGenerateOutfit} />
 
                     {/*If an outfit has been generated, show the save button*/}
