@@ -57,3 +57,9 @@ node-practice-frontend: frontend folder.
 - Place restrictions on images
 
 - Sort clothes by most/least worn, best/worst cost per wear, newest/oldest
+
+- Refine the outfit generation function
+
+* let the user exclude some categories e.g. no outerwear for a summer outfit
+
+- toggle big/small images of clothes
