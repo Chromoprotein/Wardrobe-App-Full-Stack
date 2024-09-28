@@ -62,6 +62,8 @@ node-practice-frontend: frontend folder.
 
 * let the user exclude some categories e.g. no outerwear for a summer outfit
 
-- toggle big/small images of clothes
+- toggle big/small images of clothes'
+
+- hero image loading problem
 
 - update the placeholder images
