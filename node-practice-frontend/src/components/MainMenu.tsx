@@ -3,30 +3,48 @@ import { Link } from "react-router-dom";
 import Button from "./Button";
 import Logo from "./Logo";
 import ClothingFilters from "./ClothingFilters";
+import { useState } from "react";
+import { IoIosArrowUp } from "react-icons/io";
 
 export default function MainMenu() {
+
+    const [menuIsVisible, setMenuIsVisible] = useState(false);
+
+    const toggleMenuIsVisible = () => {
+        setMenuIsVisible(!menuIsVisible);
+    }
+
     return (
-      <div className="navbarWrapper">
-        <Logo/>
+        <>
+            <div className="navbarMobileMenu">
+                <Button eventHandler={toggleMenuIsVisible}>
+                    Menu 
+                    <span className={`arrow ${menuIsVisible ? "arrowUp" : ""}`}><IoIosArrowUp /></span>
+                </Button>
+            </div>
 
-        <h2 className="customLabel">WARDROBE</h2>
-        <Link to={`/generate`}>
-            <Button children="Outfit Maker" />
-        </Link>
+            <div className={`navbarWrapper ${menuIsVisible ? "active" : ""}`}>
+                <Logo/>
 
-        <Link to={`/outfits`}>
-            <Button children="Saved Outfits" />
-        </Link>
-        <Link to={`/submit`}>
-            <Button children="Add Clothes" />
-        </Link>
+                <h2 className="customLabel centeredText">WARDROBE</h2>
+                <Link to={`/generate`}>
+                    <Button children="Outfit Maker" />
+                </Link>
 
-        <ClothingFilters />
+                <Link to={`/outfits`}>
+                    <Button children="Saved Outfits" />
+                </Link>
+                <Link to={`/submit`}>
+                    <Button children="Add Clothes" />
+                </Link>
 
-        <h2 className="customLabel">ACCOUNT</h2>
-        <Link to={`/logout`}>
-            <Button children="Log out" />
-        </Link>
-      </div>
+                <ClothingFilters />
+
+                <h2 className="customLabel centeredText">ACCOUNT</h2>
+                <Link to={`/logout`}>
+                    <Button children="Log out" />
+                </Link>
+            </div>
+        </>
     );
 };

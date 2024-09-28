@@ -33,7 +33,7 @@ p {
   display:grid;
   grid-template-columns: 1fr 7fr;
 }
-@media only screen and (max-width: 720px) {
+@media (max-width: 720px) {
   .mainPageWrapper {
     grid-template-columns: 1fr;
   }
@@ -42,6 +42,31 @@ p {
 .navbarWrapper {
   background-color: var(--dark);
   width: 100%;
+}
+/*button for opening the navbar on mobile*/
+.navbarMobileMenu {
+  display:none;
+}
+.arrow {
+  transition: 0.5s ease;
+  display:flex;
+  justify-items: center;
+}
+.arrowUp {
+  transform: rotate(180deg);
+  transform-origin: center;
+}
+@media (max-width: 768px) {
+  .navbarMobileMenu {
+    display:flex;
+    cursor: pointer;
+  }
+  .navbarWrapper { /*hide the navbar on mobile*/
+    display:none;
+  }
+  .navbarWrapper.active {
+    display:block;
+  }
 }
 /*Wraps the clothing cards and the pagination menu*/
 .mainContentWrapper {
@@ -192,9 +217,14 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 4px auto 4px auto;
   padding: 20px;
   width: 100%;
-  text-align-last: center; /*so the text in dropdown menus isn't messed up*/
-  display:block;
   max-width: 200px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.flexDirectionColumn {
+  flex-direction: column;
 }
 .bigButton:focus {
   outline: none;
@@ -219,6 +249,11 @@ input[type="number"]::-webkit-outer-spin-button {
   width:100%;
   display: block;
   margin-bottom: 3px;
+}
+@media (max-width: 768px) {
+  .logoImage {
+    display:none;
+  }
 }
 
 /*SCROLLBAR*/

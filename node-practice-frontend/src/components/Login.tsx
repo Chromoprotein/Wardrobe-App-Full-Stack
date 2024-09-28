@@ -16,6 +16,9 @@ export default function Login() {
     password: '',
   });
 
+  console.log("email " + formData.email)
+  console.log("password " + formData.password)
+
   const [message, setMessage] = useState<string>("");
   const resetMessage = () => {
     setMessage("");

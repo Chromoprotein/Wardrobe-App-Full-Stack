@@ -47,7 +47,7 @@ export function SelectMenu({ name, menuState, inputArray, eventHandler }: Select
 
 export function InputField({ label, name, menuState, eventHandler, type = "text", placeholder }: InputFieldType) {
     return (
-        <div className={menuState ? "bigButton selectedStyle" : "bigButton idleStyle"}>
+        <div className={`${menuState ? "bigButton selectedStyle" : "bigButton idleStyle"} flexDirectionColumn`}>
             <label className="customLabel">{label}</label>
             <input className="textInputStyle" type={type} name={name} value={menuState} onChange={eventHandler} placeholder={placeholder} />
         </div>

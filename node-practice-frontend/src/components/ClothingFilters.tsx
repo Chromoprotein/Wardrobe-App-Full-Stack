@@ -13,7 +13,7 @@ export default function ClothingFilters() {
     return ( 
         <>
 
-            <h2 className="customLabel">FILTERS</h2>
+            <h2 className="customLabel centeredText">FILTERS</h2>
             <ColorPicker type="checkbox" menuState={filters.color} colorsArray={colors} eventHandler={handleFiltersChange} />
 
             <SelectMenu name="formality" menuState={filters.formality} inputArray={formality} eventHandler={handleFiltersChange}/>

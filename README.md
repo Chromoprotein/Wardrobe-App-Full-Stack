@@ -54,8 +54,6 @@ node-practice-frontend: frontend folder.
 
 ## My to-do list:
 
-- Make it more mobile friendly, e.g. the logo is too big now
-
 - Place restrictions on images
 
 - Route protection on client-side too so users don't navigate where they shouldn't go and see a blank page
@@ -63,7 +61,5 @@ node-practice-frontend: frontend folder.
 - Sort clothes by most/least worn, best/worst cost per wear, newest/oldest
 
 - Custom error page
-
-- Organize folders, e.g. make a Schemas folder
 
 - there's a bug that keeps the login button disabled when the user auto-fills the credentials
