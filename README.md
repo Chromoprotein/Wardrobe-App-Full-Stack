@@ -54,16 +54,14 @@ node-practice-frontend: frontend folder.
 
 ## My to-do list:
 
-- Place restrictions on images
-
 - Sort clothes by most/least worn, best/worst cost per wear, newest/oldest
 
 - Refine the outfit generation function
 
 * let the user exclude some categories e.g. no outerwear for a summer outfit
 
-- toggle big/small images of clothes'
+* allow prioritizing less worn clothes
 
-- hero image loading problem
+- toggle big/small images of outfits
 
 - update the placeholder images
