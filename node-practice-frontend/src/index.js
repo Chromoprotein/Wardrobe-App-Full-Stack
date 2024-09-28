@@ -21,6 +21,7 @@ import UploadImage from './components/uploadImage';
 import Landing from './components/Landing';
 import GenerateOutfits from './components/GenerateOutfits';
 import SavedOutfits from './components/SavedOutfits';
+import Error from './components/Error';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -35,7 +36,7 @@ const router = createBrowserRouter(
       <Route path="landing" element={<Landing />} />
       <Route path="generate" element={<GenerateOutfits/>} />
       <Route path="outfits" element={<SavedOutfits />} />
-      <Route path="*" element={<h1>Page not found</h1>} />
+      <Route path="*" element={<Error/>} />
     </Route>
   )
 );

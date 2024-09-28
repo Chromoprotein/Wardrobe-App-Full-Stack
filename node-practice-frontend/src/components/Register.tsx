@@ -27,12 +27,13 @@ export default function Register() {
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
+    const newFormData = {
       ...formData,
       [e.target.name]: e.target.value,
-    });
+    };
+    setFormData(newFormData);
 
-    const disabledChange = !Object.values(formData).every(value => value);
+    const disabledChange = !Object.values(newFormData).every(value => value);
     setIsDisabled(disabledChange)
   };
 
