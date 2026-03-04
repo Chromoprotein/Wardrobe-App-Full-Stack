@@ -34,7 +34,7 @@ export const outfitsRandomizer = (wardrobe: ClothingProp[]): OutfitsRandomizerRe
 
     // Filter categories
     const filteredCategories = categories.filter((category) => 
-    !(isDressSelected && (category === 'bottom' || category === 'top')) && category !== 'onePieces');
+    !(isDressSelected && (category === 'bottoms' || category === 'tops')) && category !== 'onePieces');
 
     // Randomly select from remaining categories
     filteredCategories.forEach((category) => {
