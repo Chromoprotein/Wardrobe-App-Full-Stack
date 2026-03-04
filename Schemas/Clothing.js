@@ -12,39 +12,39 @@ const clothingSchema = new Schema({
     },
     subcategory: {
         type:String,
-        required:true
+        required:true,
     },
     color: {
         type:String,
-        required:true
+        required:false,
     },
     formality: {
         type:String,
-        required:true
+        required:false,
     },
     season: {
         type:String,
-        required:true
+        required:false,
     },
     cost: {
         type:Number,
-        required:true
+        required:false,
     },
     worn_count: {
         type:Number,
-        required:true
+        required:false,
     },
     filename: {
         type:String,
-        required:false
+        required:true
     },
     contentType: {
         type:String,
-        required:false
+        required:true
     },
     imageBase64: {
         type:String,
-        required:false
+        required:true
     },
     name: {
         type:String,

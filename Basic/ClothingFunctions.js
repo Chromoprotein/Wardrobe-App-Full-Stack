@@ -11,38 +11,32 @@ require('dotenv').config()
 const jwtSecret = process.env.JWT_SECRET;
 
 exports.uploadImage = async (req, res) => {
+  const filename = req.file.originalname;
+  const contentType = req.file.mimetype;
+  const imageBase64 = req.file.buffer.toString('base64');
+  const user_id = req.id;
 
   try {
-    const filename = req.file.originalname;
-    const contentType = req.file.mimetype;
-    const imageBase64 = req.file.buffer.toString('base64');
-    const userId = req.id;
-    const clothingId = req.params.id;
 
-    // Check that the clothing document exists and belongs to the user
-    const validateItem = await Clothing.findOne({ _id: clothingId, user_id: userId });
-    if (!validateItem) {
-      return res.status(404).json({ message: "Item not found for this user" });
+    if (!filename || !contentType || !imageBase64 || !user_id) {
+      return res.status(500).json({
+        message: "Form information missing or user not found",
+      })
+    } else {
+      const clothing = await Clothing.create({ user_id, filename, contentType, imageBase64 })
+      if(clothing) {
+        res.status(201).json({
+          message: "Clothing successfully created",
+          id: clothing._id,
+        });
+      }
     }
-
-    // Update the book details
-    validateItem.filename = filename;
-    validateItem.contentType = contentType;
-    validateItem.imageBase64 = imageBase64;
-    
-    await validateItem.save();
-
-    res.status(200).json({
-      message: "Clothing successfully updated",
-      id: validateItem._id
-    });
   } catch (error) {
     res.status(500).json({
       message: "An error occurred",
       error: error.message,
-    });
+    })
   }
-  
 }
 
 // Lists all the user's clothes
@@ -90,16 +84,19 @@ exports.getItemById = async (req, res) => {
 exports.addItem = async (req, res) => {
   try {
     const { category, subcategory, color, formality, season, cost, worn_count, name, brand } = req.body;
+    const filename = req.file.originalname;
+    const contentType = req.file.mimetype;
+    const imageBase64 = req.file.buffer.toString('base64');
 
     // User id comes from authentication middleware
     const user_id = req.id;
 
-    if (!category || !subcategory || !color || !formality || !season || !cost || !worn_count || !user_id) {
+    if (!filename || !contentType || !imageBase64 || !category || !subcategory || !color || !formality || !season || !cost || !worn_count || !user_id) {
       return res.status(500).json({
         message: "Form information missing or user not found",
       })
     } else {
-      const clothing = await Clothing.create({ user_id, category, subcategory, color, formality, season, cost, worn_count, name, brand })
+      const clothing = await Clothing.create({ filename, contentType, imageBase64, user_id, category, subcategory, color, formality, season, cost, worn_count, name, brand })
       if(clothing) {
         res.status(201).json({
           message: "Clothing successfully created",

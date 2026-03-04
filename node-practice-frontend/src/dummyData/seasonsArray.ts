@@ -1,1 +1,1 @@
-export const seasons: string[] = ["cold", "cool", "warm", "hot"];
+export const seasons: string[] = ["winter", "autumn/spring", "summer"];

@@ -8,6 +8,11 @@ import { FormProp } from "./interfaces/interfaces";
 import { navigateWithTimeout } from "utils/navigateWithTimeout";
 import { CustomError } from "./interfaces/interfaces";
 import { clothingCategories } from "dummyData/subcategoryArray";
+import Button from "./Button";
+import useReturn from "utils/useReturn";
+import BackButton from "./BackButton";
+import Message from "./Message";
+
 
 export default function ClothingFormLogic() {
 
@@ -22,12 +27,13 @@ export default function ClothingFormLogic() {
         worn_count: "",
         name: "",
         brand: "",
+        filename: "",
     }
-    const mandatoryFields: Array<keyof FormProp> = ["category", "subcategory", "color", "season", "cost", "formality", "worn_count"];
+    const mandatoryFields: Array<keyof FormProp> = ["category", "subcategory", "color", "season", "cost", "formality", "worn_count", "filename"];
     const [formState, setFormState] = useState<FormProp>(initialState as FormProp);
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
-    const navigate = useNavigate();
+    const returnToFrontPage = useReturn();
 
     const [message, setMessage] = useState<string>("");
 
@@ -79,7 +85,7 @@ export default function ClothingFormLogic() {
             console.log(response.data);
             setIsSuccess(true);
             setMessage(response.data.message);
-            navigateWithTimeout(navigate, `/uploadImage/${response.data.id}`);
+            returnToFrontPage();
         } catch (error) {
             const err = error as CustomError;
             const errorMessage = err.response?.data?.message || "An unknown error occurred"; 
@@ -88,9 +94,26 @@ export default function ClothingFormLogic() {
         }
     };
     
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            setFormState((prevState) => ({ ...prevState, "file": files[0] }));
+            setFormState((prevState) => ({ ...prevState, "filename": files[0].name }));
+        }
+    };
+
+    const handleButtonClick = () => {
+      const fileInput = document.getElementById('file-upload');
+      if (fileInput) {
+        (fileInput as HTMLInputElement).click();
+      }
+    };
+
     return (
       <>
         <ClothingForm 
+            handleFileUpload={handleFileUpload}
+            handleImageButtonClick={handleButtonClick}
             handleClothingSubmit={handleAdd} 
             newClothing={formState}
             handleClothesFormChange={handleFormChange} 

@@ -38,9 +38,10 @@ export interface FormProp {
   cost: string;
   formality: string;
   worn_count: string;
-
   name: string;
   brand: string;
+  file: null | File;
+  filename: string;
 }
 
 export interface UserFormProp {

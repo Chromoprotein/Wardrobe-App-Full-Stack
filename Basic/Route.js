@@ -42,13 +42,13 @@ const uploadHandler = (req, res, next) => {
 router.route("/getClothes").get(userAuth, getClothes)
 router.route("/fetchOutfits").get(userAuth, fetchOutfits)
 router.route("/getItemById/:id").get(userAuth, getItemById)
-router.route("/addItem").post(userAuth, upload.none(), addItem)
+router.route("/addItem").post(userAuth, uploadHandler, addItem)
 router.route("/addOutfit").post(userAuth, upload.none(), addOutfit)
 router.route("/updateItem/:id").put(userAuth, upload.none(), updateItem)
 router.route("/updateWearCount").put(userAuth, upload.none(), updateWearCount)
 router.route("/deleteItem/:id").delete(userAuth, deleteItem)
 router.route("/deleteOutfit/:id").delete(userAuth, deleteOutfit)
 
-router.route("/uploadImage/:id").put(userAuth, uploadHandler, uploadImage)
+router.route("/uploadImage").put(userAuth, uploadHandler, uploadImage)
 
 module.exports = router 

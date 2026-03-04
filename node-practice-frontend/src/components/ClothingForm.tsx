@@ -17,13 +17,30 @@ interface FormProps {
   isDisabled: boolean;
   mainCategories: string[];
   subCategories: string[];
+  handleFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleImageButtonClick: () => void;
 }
 
-export default function ClothingForm({ handleClothingSubmit, newClothing, handleClothesFormChange, isSuccess, message, isDisabled, mainCategories, subCategories }: FormProps) {
+export default function ClothingForm({ handleClothingSubmit, newClothing, handleClothesFormChange, isSuccess, message, isDisabled, mainCategories, subCategories, handleFileUpload, handleImageButtonClick }: FormProps) {
 
   return (
     <div className="formWrapper">
       <form onSubmit={handleClothingSubmit}>
+
+        <input
+        type="file"
+        id="file-upload"
+        accept="image/*"
+        style={{ display: 'none' }}
+        onChange={handleFileUpload}
+        />
+
+        <Button eventHandler={handleImageButtonClick}>Upload Image</Button>
+        {newClothing.filename &&
+            <label className='customLabel' htmlFor='customFile'>
+                {newClothing.filename}
+            </label>
+        }
 
         <InputField label="Name (optional)" name="name" menuState={newClothing.name} eventHandler={handleClothesFormChange} placeholder="Work shirt"/>
 
@@ -43,7 +60,7 @@ export default function ClothingForm({ handleClothingSubmit, newClothing, handle
 
         <InputField label="Brand (optional)" name="brand" menuState={newClothing.brand} eventHandler={handleClothesFormChange}/>
 
-        <Button isDisabled={isDisabled} actionType="submit" isSuccess={isSuccess}>Save & Next</Button>
+        <Button isDisabled={isDisabled} actionType="submit" isSuccess={isSuccess}>Submit</Button>
 
         {message && <Message>{message}</Message>}
   
