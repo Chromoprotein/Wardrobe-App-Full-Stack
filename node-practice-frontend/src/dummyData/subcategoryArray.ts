@@ -1,8 +1,8 @@
 export const clothingCategories = {
-    tops: ["shirt", "blouse", "sweater"],
-    bottoms: ["shorts", "jeans", "pants", "skirt", "leggings"],
+    tops: ["short-sleeved", "long-sleeved", "sleeveless"],
+    bottoms: ["shorts", "pants", "skirt"],
     onePieces: ["dress"],
-    layeringPieces: ["cardigan"],
+    layeringPieces: ["cardigan", "corset", "harness", "cape"],
     outerwear: ["jacket", "coat"],
-    accessories: ["socks"]
+    accessories: ["neckwear", "wristwear", "earrings", "headwear", "other"]
 }

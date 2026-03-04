@@ -1,1 +1,1 @@
-export const formality: string[] = ["casual", "dressy casual", "workwear", "formal", "sports", "gardening-tier"];
+export const formality: string[] = ["casual", "workwear", "party"];
