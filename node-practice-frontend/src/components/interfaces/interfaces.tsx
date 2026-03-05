@@ -40,7 +40,7 @@ export interface FormProp {
   worn_count: string;
   name: string;
   brand: string;
-  file: null | File;
+  file?: null | File;
   filename: string;
 }
 

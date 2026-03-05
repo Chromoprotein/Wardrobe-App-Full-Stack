@@ -26,6 +26,8 @@ export default function ClothingEditLogic() {
       worn_count: "",
       name: "",
       brand: "",
+      filename: "",
+      file: null,
   }
   const mandatoryFields: Array<keyof FormProp> = ["category", "subcategory", "color", "season", "cost", "formality", "worn_count"];
 
@@ -70,6 +72,7 @@ export default function ClothingEditLogic() {
             worn_count: newData.worn_count,
             name: newData.name,
             brand: newData.brand,
+            filename: newData.filename,
         })
         setSubCategories(clothingCategories[newData.category as keyof typeof clothingCategories] || []);
 
@@ -113,36 +116,36 @@ export default function ClothingEditLogic() {
       e.preventDefault();
       setIsDisabled(true);
 
-      // If there are updates, send them to the server, else go to the next part of the form
-      if(hasUpdates) {
-        const formData = new FormData();
-        for (const key in formState) {
-            const value = formState[key as keyof FormProp];
-            if (value !== null) {  // Ensure the value is not null
-                formData.append(key, value as string | Blob);
-            }
-        }
+    // If there are updates, send them to the server, else go to the next part of the form
+      const formData = new FormData();
+      for (const key in formState) {
+          const value = formState[key as keyof FormProp];
+          if (value !== null) {  // Ensure the value is not null
+              formData.append(key, value as string | Blob);
+          }
+      }
 
-        try {
-            const addUri = `${process.env.REACT_APP_UPDATE_ITEM_URI}/${id}`;
+      try {
+          const addUri = `${process.env.REACT_APP_UPDATE_ITEM_URI}/${id}`;
 
-            if (!addUri) {
-                throw new Error("URI is not defined");
-            }
+          if (!addUri) {
+              throw new Error("URI is not defined");
+          }
 
-            const response = await axios.put(addUri, formState, { withCredentials: true });
+          const response = await axios.put(addUri, formState, {
+              headers: {
+                  'Content-Type': 'multipart/form-data'
+              }, 
+              withCredentials: true,
+          });
 
-            console.log(response.data);
-            setIsSuccess(true);
-            setMessage(response.data.message);
-            navigateWithTimeout(navigate, `/uploadImage/${response.data.id}`);
-        } catch (error) {
-            const err = error as CustomError;
-            setMessage("Error: " + err.response.data.message);
-            setIsDisabled(false);
-        }
-      } else {
-        navigate(`/uploadImage/${id}`);
+          console.log(response.data);
+          setIsSuccess(true);
+          setMessage(response.data.message);
+      } catch (error) {
+          const err = error as CustomError;
+          setMessage("Error: " + err.response.data.message);
+          setIsDisabled(false);
       }
     };
 
@@ -169,12 +172,28 @@ export default function ClothingEditLogic() {
             setMessage("Error: " + err.response.data.message);
             setIsDisabled(false);
         }
-        
+    };
+
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            setFormState((prevState) => ({ ...prevState, "file": files[0] }));
+            setFormState((prevState) => ({ ...prevState, "filename": files[0].name }));
+        }
+    };
+
+    const handleButtonClick = () => {
+      const fileInput = document.getElementById('file-upload');
+      if (fileInput) {
+        (fileInput as HTMLInputElement).click();
+      }
     };
     
     return (
       <>
         <ClothingForm 
+            handleFileUpload={handleFileUpload}
+            handleImageButtonClick={handleButtonClick}
             handleClothingSubmit={handleUpdate} 
             newClothing={formState}
             handleClothesFormChange={handleFormChange} 

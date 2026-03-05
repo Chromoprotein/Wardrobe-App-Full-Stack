@@ -174,6 +174,9 @@ exports.updateItem = async (req, res) => {
     const { category, subcategory, color, season, cost, formality, worn_count, brand, name } = req.body
     const clothingId = req.params.id;
     const userId = req.id; // User id from authentication middleware
+    const filename = req.file.originalname;
+    const contentType = req.file.mimetype;
+    const imageBase64 = req.file.buffer.toString('base64');
 
     // Check that all the data is present
     if (!category || !subcategory || !color || !season || !cost || !formality || !worn_count || !userId) {
@@ -198,6 +201,11 @@ exports.updateItem = async (req, res) => {
     validateItem.worn_count = worn_count;
     validateItem.name = name;
     validateItem.brand = brand;
+    if(filename && contentType && imageBase64) {
+      validateItem.filename = filename;
+      validateItem.contentType = contentType;
+      validateItem.imageBase64 = imageBase64;
+    }
     
     await validateItem.save();
 

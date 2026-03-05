@@ -28,6 +28,7 @@ export default function ClothingFormLogic() {
         name: "",
         brand: "",
         filename: "",
+        file: null,
     }
     const mandatoryFields: Array<keyof FormProp> = ["category", "subcategory", "color", "season", "cost", "formality", "worn_count", "filename"];
     const [formState, setFormState] = useState<FormProp>(initialState as FormProp);
