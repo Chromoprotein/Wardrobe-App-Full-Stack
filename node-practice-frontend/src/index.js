@@ -33,7 +33,7 @@ const router = createBrowserRouter(
         path="edit/:id"
         element={
           <RequireAuth redirectTo="/login">
-            <ClothingEditLogic />
+            <ClothingFormLogic />
           </RequireAuth>
         }
       />
