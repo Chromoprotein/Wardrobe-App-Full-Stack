@@ -19,6 +19,11 @@ export interface ClothingProp {
   contentType?: string;
 }
 
+export interface ImageProp {
+  imageBase64?: string;
+  contentType?: string;
+}
+
 export interface OutfitProp {
   _id: string;
   user_id?: string;
@@ -41,7 +46,7 @@ export interface FormProp {
   name: string;
   brand: string;
   file?: null | File;
-  filename: string;
+  filename?: string;
 }
 
 export interface UserFormProp {

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import ClothingForm from './ClothingForm';
 import axios from "axios";
-import { FormProp } from "./interfaces/interfaces";
+import { FormProp, ImageProp } from "./interfaces/interfaces";
 import Button from "./Button";
 import useReturn from "utils/useReturn";
 import { CustomError } from "./interfaces/interfaces";
@@ -29,10 +29,19 @@ export default function ClothingFormLogic() {
   }
   const mandatoryFields: Array<keyof FormProp> = ["category", "subcategory", "color", "season", "cost", "formality", "worn_count"];
 
+  const initialImageState = {
+    imageBase64: "",
+    contentType: "",
+  }
+
+  // Image states
   const [formState, setFormState] = useState<FormProp>(initialState as FormProp);
+  const [oldImageState, setOldImageState] = useState<ImageProp>(initialImageState as ImageProp);
+  const [previewImage, setPreviewImage] = useState<string>("");
+
+  // Utility states
   const [loading, setLoading] = useState<boolean>(true);
   const [hasUpdates, setHasUpdates] = useState<boolean>(false);
-
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [isSuccessDelete, setIsSuccessDelete] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
@@ -69,10 +78,14 @@ export default function ClothingFormLogic() {
               formality: newData.formality,
               worn_count: newData.worn_count,
               name: newData.name,
-              brand: newData.brand,
-              filename: newData.filename,
+              brand: newData.brand
           })
           setSubCategories(clothingCategories[newData.category as keyof typeof clothingCategories] || []);
+
+          setOldImageState({
+            imageBase64: newData.imageBase64,
+            contentType: newData.contentType,
+          })
 
         } catch (error) {
           const err = error as CustomError;
@@ -193,6 +206,8 @@ export default function ClothingFormLogic() {
       if (files && files.length > 0) {
           setFormState((prevState) => ({ ...prevState, "file": files[0] }));
           setFormState((prevState) => ({ ...prevState, "filename": files[0].name }));
+
+          setPreviewImage(URL.createObjectURL(files[0]));
       }
   };
 
@@ -202,7 +217,7 @@ export default function ClothingFormLogic() {
       (fileInput as HTMLInputElement).click();
     }
   };
-  
+
   return (
     <>
       <ClothingForm 
@@ -216,6 +231,8 @@ export default function ClothingFormLogic() {
           isDisabled={isDisabled}
           mainCategories={mainCategories}
           subCategories={subCategories}
+          oldImage={oldImageState}
+          previewImage={previewImage}
       />
 
       <div className="mainContentWrapper">

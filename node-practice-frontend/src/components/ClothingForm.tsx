@@ -5,7 +5,7 @@ import { formality } from "../dummyData/formalityArray";
 import { SelectMenu, InputField, ColorPicker } from "./FormComponents";
 import { seasons } from "../dummyData/seasonsArray";
 import Button from "./Button";
-import { FormProp } from "./interfaces/interfaces";
+import { FormProp, ImageProp } from "./interfaces/interfaces";
 import Message from "./Message";
 
 interface FormProps {
@@ -19,21 +19,32 @@ interface FormProps {
   subCategories: string[];
   handleFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleImageButtonClick: () => void;
+  oldImage: ImageProp;
+  previewImage: string;
 }
 
-export default function ClothingForm({ handleClothingSubmit, newClothing, handleClothesFormChange, isSuccess, message, isDisabled, mainCategories, subCategories, handleFileUpload, handleImageButtonClick }: FormProps) {
+export default function ClothingForm({ handleClothingSubmit, newClothing, handleClothesFormChange, isSuccess, message, isDisabled, mainCategories, subCategories, handleFileUpload, handleImageButtonClick, oldImage, previewImage }: FormProps) {
+
+  const { imageBase64, contentType } = oldImage;
+  const oldClothingPicture = "data:" + contentType + ";base64," + imageBase64;
 
   return (
     <div className="formWrapper">
       <form onSubmit={handleClothingSubmit}>
 
         <input
-        type="file"
-        id="file-upload"
-        accept="image/*"
-        style={{ display: 'none' }}
-        onChange={handleFileUpload}
+          type="file"
+          id="file-upload"
+          accept="image/*"
+          style={{ display: 'none' }}
+          onChange={handleFileUpload}
         />
+
+      {previewImage ? 
+        <img src={previewImage} alt="" className="clothingImage" />
+        : oldClothingPicture &&
+        <img src={oldClothingPicture} alt="" className="clothingImage" />
+      }
 
         <Button eventHandler={handleImageButtonClick}>Upload Image</Button>
         {newClothing.filename &&
