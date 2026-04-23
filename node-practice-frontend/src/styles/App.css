@@ -221,7 +221,6 @@ input[type="number"]::-webkit-outer-spin-button {
   display:flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
 }
 .flexDirectionColumn {
   flex-direction: column;

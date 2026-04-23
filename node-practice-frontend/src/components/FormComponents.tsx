@@ -6,6 +6,7 @@ interface SelectMenuType {
     menuState: string;
     inputArray: string[];
     eventHandler: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+    mandatory?: number;
 }
 
 interface InputFieldType {
@@ -15,6 +16,7 @@ interface InputFieldType {
     eventHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
     type?: string;
     placeholder?: string;
+    mandatory?: number;
 }
 
 interface ColorPickerType {
@@ -24,32 +26,36 @@ interface ColorPickerType {
     eventHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function SelectMenu({ name, menuState, inputArray, eventHandler }: SelectMenuType) {
+export function SelectMenu({ name, menuState, inputArray, eventHandler, mandatory }: SelectMenuType) {
 
     return (
         <>
             {inputArray &&
-                <select className={menuState ? 'bigButton selectedStyle' : 'bigButton idleStyle'} value={menuState} name={name} onChange={eventHandler}>
-                    <option value="" disabled>
-                        {capitalize(name)}
-                    </option>
-                    {inputArray.map((formality) => (
-                        <option key={formality} value={formality}>
-                        {capitalize(formality)}
-                        </option>
-                    ))}
-                </select>
+                <div className={`${menuState ? "bigButton selectedStyle" : "bigButton idleStyle"} flexDirectionColumn`}>
+                    <label className="customLabel">{capitalize(name)} {mandatory === 1 && "*"}</label>
+                    <select 
+                        className="bigButton textInputStyle" 
+                        value={menuState} 
+                        name={name} 
+                        onChange={eventHandler}>
+                        {inputArray.map((category) => (
+                            <option key={category} value={category}>
+                                {capitalize(category)}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             }
         </>
     );
 
 };
 
-export function InputField({ label, name, menuState, eventHandler, type = "text", placeholder }: InputFieldType) {
+export function InputField({ label, name, menuState, eventHandler, type = "text", placeholder, mandatory }: InputFieldType) {
     return (
         <div className={`${menuState ? "bigButton selectedStyle" : "bigButton idleStyle"} flexDirectionColumn`}>
-            <label className="customLabel">{label}</label>
-            <input className="textInputStyle" type={type} name={name} value={menuState} onChange={eventHandler} placeholder={placeholder} />
+            <label className="customLabel">{label} {mandatory === 1 && "*"}</label>
+            <input className="textInputStyle" type={type} name={name} value={menuState} onChange={eventHandler} placeholder={placeholder} onKeyDown={(e) => type === "number" && e.key === "-" && e.preventDefault()}/>
         </div>
     );
 }

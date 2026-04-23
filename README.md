@@ -58,10 +58,8 @@ node-practice-frontend: frontend folder.
 
 - Refine the outfit generation function
 
-* let the user exclude some categories e.g. no outerwear for a summer outfit
-
 * allow prioritizing less worn clothes
 
-- toggle big/small images of outfits
-
 - update the placeholder images
+
+- fix error with deleting items & returning to an empty page

@@ -26,7 +26,7 @@ interface FormProps {
 export default function ClothingForm({ handleClothingSubmit, newClothing, handleClothesFormChange, isSuccess, message, isDisabled, mainCategories, subCategories, handleFileUpload, handleImageButtonClick, oldImage, previewImage }: FormProps) {
 
   const { imageBase64, contentType } = oldImage;
-  const oldClothingPicture = "data:" + contentType + ";base64," + imageBase64;
+  const oldClothingPicture = contentType && imageBase64 ? "data:" + contentType + ";base64," + imageBase64 : null;
 
   return (
     <div className="formWrapper">
@@ -53,11 +53,11 @@ export default function ClothingForm({ handleClothingSubmit, newClothing, handle
             </label>
         }
 
-        <InputField label="Name (optional)" name="name" menuState={newClothing.name} eventHandler={handleClothesFormChange} placeholder="Work shirt"/>
+        <InputField label="Name" name="name" menuState={newClothing.name} eventHandler={handleClothesFormChange} placeholder="Work shirt"/>
 
-        <SelectMenu name="category" menuState={newClothing.category} inputArray={mainCategories} eventHandler={handleClothesFormChange}/>
+        <SelectMenu name="category" menuState={newClothing.category} inputArray={mainCategories} eventHandler={handleClothesFormChange} mandatory={1} />
 
-        <SelectMenu name="subcategory" menuState={newClothing.subcategory} inputArray={subCategories} eventHandler={handleClothesFormChange}/>
+        <SelectMenu name="subcategory" menuState={newClothing.subcategory} inputArray={subCategories} eventHandler={handleClothesFormChange} mandatory={1} />
 
         <SelectMenu name="formality" menuState={newClothing.formality} inputArray={formality} eventHandler={handleClothesFormChange}/>
 
@@ -69,7 +69,7 @@ export default function ClothingForm({ handleClothingSubmit, newClothing, handle
 
         <InputField label="Worn count" name="worn_count" menuState={newClothing.worn_count} eventHandler={handleClothesFormChange} type="number" placeholder="0"/>
 
-        <InputField label="Brand (optional)" name="brand" menuState={newClothing.brand} eventHandler={handleClothesFormChange}/>
+        <InputField label="Brand" name="brand" menuState={newClothing.brand} eventHandler={handleClothesFormChange}/>
 
         <Button isDisabled={isDisabled} actionType="submit" isSuccess={isSuccess}>Submit</Button>
 

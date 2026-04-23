@@ -45,7 +45,7 @@ exports.getClothes = async (req, res) => {
         // User id comes from the auth middleware
         const userId = req.id;
 
-        // Find the user by ID and populate the books field
+        // Find the user by ID and populate the clothes field
         const clothes = await Clothing.find({ user_id: userId }).sort({ createdAt: -1 });
 
         if (!clothes) {
@@ -191,7 +191,7 @@ exports.updateItem = async (req, res) => {
       return res.status(404).json({ message: "Item not found for this user" });
     }
 
-    // Update the book details
+    // Update the clothing details
     validateItem.category = category;
     validateItem.subcategory = subcategory;
     validateItem.color = color;
