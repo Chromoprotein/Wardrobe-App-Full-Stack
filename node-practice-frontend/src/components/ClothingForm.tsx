@@ -46,7 +46,7 @@ export default function ClothingForm({ handleClothingSubmit, newClothing, handle
         <img src={oldClothingPicture} alt="" className="clothingImage" />
       }
 
-        <Button eventHandler={handleImageButtonClick}>Upload Image</Button>
+        <Button eventHandler={handleImageButtonClick}>Upload Image *</Button>
         {newClothing.filename &&
             <label className='customLabel' htmlFor='customFile'>
                 {newClothing.filename}

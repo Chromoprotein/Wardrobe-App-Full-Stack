@@ -27,14 +27,14 @@ export default function ClothingFormLogic() {
       filename: "",
       file: null,
   }
-  const mandatoryFields: Array<keyof FormProp> = ["category", "subcategory", "color", "season", "cost", "formality", "worn_count"];
+  const mandatoryFields: Array<keyof FormProp> = ["category", "subcategory", "filename"];
 
   const initialImageState = {
     imageBase64: "",
     contentType: "",
   }
 
-  // Image states
+  // Item states
   const [formState, setFormState] = useState<FormProp>(initialState as FormProp);
   const [oldImageState, setOldImageState] = useState<ImageProp>(initialImageState as ImageProp);
   const [previewImage, setPreviewImage] = useState<string>("");
@@ -44,7 +44,7 @@ export default function ClothingFormLogic() {
   const [hasUpdates, setHasUpdates] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [isSuccessDelete, setIsSuccessDelete] = useState<boolean>(false);
-  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const [isDisabled, setIsDisabled] = useState<boolean>(id ? false : true);
   const [message, setMessage] = useState<string>("");
 
   //Clothing categories
@@ -69,6 +69,7 @@ export default function ClothingFormLogic() {
           });
 
           const newData = res.data.clothing;
+          console.log(newData)
           setFormState({
               category: newData.category,
               subcategory: newData.subcategory,
@@ -78,7 +79,8 @@ export default function ClothingFormLogic() {
               formality: newData.formality,
               worn_count: newData.worn_count,
               name: newData.name,
-              brand: newData.brand
+              brand: newData.brand,
+              filename: newData.filename
           })
           setSubCategories(clothingCategories[newData.category as keyof typeof clothingCategories] || []);
 
@@ -100,10 +102,10 @@ export default function ClothingFormLogic() {
         setLoading(false);
     }
     
-  }, [setFormState, id, message])
+  }, [setFormState, id])
 
   if (loading) return <Spinner />;
-  
+
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
     const newState: FormProp = { ...formState, [name]: value };

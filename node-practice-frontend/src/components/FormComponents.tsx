@@ -38,6 +38,7 @@ export function SelectMenu({ name, menuState, inputArray, eventHandler, mandator
                         value={menuState} 
                         name={name} 
                         onChange={eventHandler}>
+                        <option value="" disabled selected></option>
                         {inputArray.map((category) => (
                             <option key={category} value={category}>
                                 {capitalize(category)}

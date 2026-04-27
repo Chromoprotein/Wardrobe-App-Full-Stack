@@ -34,20 +34,21 @@ export default function ClothingCard({ clothingProp }: ClothingCardProps) {
   // The key is a clothing category, the value is an image
   const clothingPicture = (!imageBase64 || !contentType) ? images[subcategory] : ("data:" + contentType + ";base64," + imageBase64);
 
-  const spacer = <span> &#8226; </span>;
+  const spacer = " - ";
 
   return (
     <div className="clothingCard idleStyle">
       <Link to={`/edit/${_id}`}>
         <img src={clothingPicture} alt={filename || category} className="clothingImage placeholderImage" />
         <div className="clothingTextWrapper">
-          {name && name} {name && spacer} {subcategory} {spacer}
-          {color} {spacer} {season} {spacer}
-          {formality} {spacer} {brand && brand} {brand && spacer} wears: {worn_count} {spacer}
-          CPW:{" "}
-          {worn_count !== 0 ? (
-            <span>{costPerWear} </span>
-          ) : "N/A" }
+          {name && `${name} ${spacer}`}
+          {subcategory} {spacer}
+          {color && `${color} ${spacer}`}
+          {season && `${season} ${spacer}`}
+          {formality && `${formality} ${spacer}`}
+          {brand && `${brand} ${spacer}`}
+          {worn_count > 0 && `wears: ${worn_count} ${spacer}`}
+          {costPerWear && `CPW: ${costPerWear}`}
         </div>
       </Link>
     </div>

@@ -91,7 +91,7 @@ exports.addItem = async (req, res) => {
     // User id comes from authentication middleware
     const user_id = req.id;
 
-    if (!filename || !contentType || !imageBase64 || !category || !subcategory || !color || !formality || !season || !cost || !worn_count || !user_id) {
+    if (!filename || !contentType || !imageBase64 || !category || !subcategory || !user_id) {
       return res.status(500).json({
         message: "Form information missing or user not found",
       })
@@ -178,8 +178,8 @@ exports.updateItem = async (req, res) => {
     const contentType = req.file && req.file.mimetype;
     const imageBase64 = req.file && req.file.buffer.toString('base64');
 
-    // Check that all the data is present
-    if (!category || !subcategory || !color || !season || !cost || !formality || !worn_count || !userId) {
+    // Check that all the mandatory data is present
+    if (!category || !subcategory || !userId) {
       return res.status(400).json({
         message: "Required information is missing",
       });
@@ -194,13 +194,27 @@ exports.updateItem = async (req, res) => {
     // Update the clothing details
     validateItem.category = category;
     validateItem.subcategory = subcategory;
-    validateItem.color = color;
-    validateItem.season = season;
-    validateItem.cost = cost;
-    validateItem.formality = formality;
-    validateItem.worn_count = worn_count;
-    validateItem.name = name;
-    validateItem.brand = brand;
+    if(color) {
+      validateItem.color = color;
+    }
+    if(season) {
+      validateItem.season = season;
+    }
+    if(cost) {
+      validateItem.cost = cost;
+    }
+    if(formality) {
+      validateItem.formality = formality;
+    }
+    if(worn_count) {
+      validateItem.worn_count = worn_count;
+    }
+    if(name) {
+      validateItem.name = name;
+    }
+    if(brand) {
+      validateItem.brand = brand;
+    }
     if(filename && contentType && imageBase64) {
       validateItem.filename = filename;
       validateItem.contentType = contentType;
