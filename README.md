@@ -60,6 +60,4 @@ node-practice-frontend: frontend folder.
 
 * allow prioritizing less worn clothes
 
-- update the placeholder images
-
-- fix error with deleting items & returning to an empty page
+- remove the placeholder images because photos are mandatory now

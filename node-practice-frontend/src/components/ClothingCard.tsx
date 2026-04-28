@@ -24,7 +24,7 @@ export default function ClothingCard({ clothingProp }: ClothingCardProps) {
 
   const { cost, worn_count, category, subcategory, _id, color, season, formality, filename, imageBase64, contentType, name, brand } = clothingProp; 
 
-  const costPerWear = (cost / worn_count).toFixed(2);
+  const costPerWear = (cost && worn_count) ? (cost / worn_count).toFixed(2) : null;
 
   // Placeholder images
   // Record constructs an object shape
@@ -42,13 +42,13 @@ export default function ClothingCard({ clothingProp }: ClothingCardProps) {
         <img src={clothingPicture} alt={filename || category} className="clothingImage placeholderImage" />
         <div className="clothingTextWrapper">
           {name && `${name} ${spacer}`}
-          {subcategory} {spacer}
-          {color && `${color} ${spacer}`}
-          {season && `${season} ${spacer}`}
-          {formality && `${formality} ${spacer}`}
-          {brand && `${brand} ${spacer}`}
-          {worn_count > 0 && `wears: ${worn_count} ${spacer}`}
-          {costPerWear && `CPW: ${costPerWear}`}
+          {subcategory}
+          {color && `${spacer} ${color}`}
+          {season && `${spacer} ${season}`}
+          {formality && `${spacer} ${formality}`}
+          {brand && `${spacer} ${brand}`}
+          {worn_count > 0 && `${spacer} wears: ${worn_count}`}
+          {costPerWear && `${spacer} CPW: ${costPerWear}`}
         </div>
       </Link>
     </div>
