@@ -21,7 +21,7 @@ function App() {
   }, [getClothes]);
 
   // filteredClothes = function that applies filters on the clothes array
-  const { filteredClothes } = useFilterContext();
+  const { filteredClothes, sortedClothes } = useFilterContext();
 
   // currentItems = function that slices the clothes/outfits array for pagination purposes
   const { currentItems } = usePaginationContext();
@@ -35,7 +35,7 @@ function App() {
   if (!clothes) return <Message>No clothes available</Message>
 
   // Apply filters on clothes and map them
-  const mapClothes: JSX.Element[] = filteredClothes(clothes)
+  const mapClothes: JSX.Element[] = sortedClothes(filteredClothes(clothes))
     .map((piece: ClothingProp) => (
       <div key={piece._id}>
         <ClothingCard clothingProp={piece} />

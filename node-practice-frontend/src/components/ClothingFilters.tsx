@@ -3,6 +3,7 @@ import colors from "../dummyData/ColorsArray.ts";
 import { formality } from "../dummyData/formalityArray.ts";
 import { useFilterContext } from "../contexts/FilterContext";
 import { seasons } from "../dummyData/seasonsArray.ts";
+import { orders } from "dummyData/ordersArray.ts";
 import { ColorPicker, SelectMenu } from "./FormComponents";
 import Button from "./Button";
 
@@ -19,6 +20,8 @@ export default function ClothingFilters() {
             <SelectMenu name="formality" menuState={filters.formality} inputArray={formality} eventHandler={handleFiltersChange}/>
 
             <SelectMenu name="season" menuState={filters.season} inputArray={seasons} eventHandler={handleFiltersChange}/>
+
+            <SelectMenu name="order" menuState={filters.order} inputArray={orders} eventHandler={handleFiltersChange}/>
 
             <Button isDisabled={resetButtonState} children="Reset Filters" eventHandler={resetFilters} />
             

@@ -8,6 +8,7 @@ interface FilterState {
   formality: string;
   color: string[];
   season: string;
+  order: string;
 }
 
 interface FilterContextType {
@@ -19,6 +20,7 @@ interface FilterContextType {
   setResetButtonState: (resetButtonState: boolean) => void;
   filteredClothes: (clothes: ClothingProp[]) => ClothingProp[];
   filteredOutfits: (clothes: OutfitProp[]) => OutfitProp[];
+  sortedClothes: (clothes: ClothingProp[]) => ClothingProp[];
 }
 
 interface FilterContextProviderProps {
@@ -33,6 +35,7 @@ export const FilterContextProvider = ({ children }: FilterContextProviderProps) 
     formality: "",
     color: [],
     season: "",
+    order: "",
   });
 
   const [resetButtonState, setResetButtonState] = useState<boolean>(true);
@@ -74,7 +77,7 @@ export const FilterContextProvider = ({ children }: FilterContextProviderProps) 
     };
 
     const resetFilters = () => {
-        setFilters({ formality: "", color: [], season: "" });
+        setFilters({ formality: "", color: [], season: "", order: "" });
         setResetButtonState(true);
 
         // filter change returns to page 1
@@ -91,6 +94,20 @@ export const FilterContextProvider = ({ children }: FilterContextProviderProps) 
         );
     };
 
+    // Default sorts newest to oldest
+    const sortedClothes = (clothes: ClothingProp[]) => {
+        const sortClothes = [...clothes].sort(
+            (a, b) => 
+            (filters.order === "most worn" ? b.worn_count - a.worn_count :
+            filters.order === "least worn" ? a.worn_count - b.worn_count :
+            filters.order === "oldest" ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime() : 
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            )
+        );
+
+        return sortClothes;
+    }
+
     const filteredOutfits = (outfits: OutfitProp[]) => {
         return outfits.filter(
             (outfit) =>
@@ -101,7 +118,7 @@ export const FilterContextProvider = ({ children }: FilterContextProviderProps) 
     };
     
     return (
-        <FilterContext.Provider value={{ filters, setFilters, handleFiltersChange, resetFilters, resetButtonState, setResetButtonState, filteredClothes, filteredOutfits }}>
+        <FilterContext.Provider value={{ filters, setFilters, handleFiltersChange, resetFilters, resetButtonState, setResetButtonState, filteredClothes, filteredOutfits, sortedClothes }}>
             {children}
         </FilterContext.Provider>
     );

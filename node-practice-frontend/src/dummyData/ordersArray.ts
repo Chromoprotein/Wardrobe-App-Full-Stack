@@ -1,0 +1,1 @@
+export const orders: string[] = ["newest", "oldest", "most worn", "least worn"];

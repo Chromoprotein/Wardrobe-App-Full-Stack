@@ -10,6 +10,7 @@ export interface ClothingProp {
   season: string;
   cost: number;
   worn_count: number;
+  createdAt: string;
 
   name?: string;
   brand?: string;
